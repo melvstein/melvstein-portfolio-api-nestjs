@@ -1,0 +1,167 @@
+// use prisma-next
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+namespace public {
+  model User {
+    id             Uuid                @id(map: "users_pkey")
+    username       VarChar(50)
+    email          VarChar(255)
+    status         pg.enum(UserStatus) @default("ACTIVE")
+    createdAt      Timestamp(3)        @default(now()) @map("created_at")
+    updatedAt      Timestamp(3)        @map("updated_at")
+    auditLogs      AuditLog[]
+    authCredential AuthCredential?
+    authTokens     AuthToken[]
+    userProfile    UserProfile?
+    userRoles      UserRole[]
+
+    @@index([createdAt], map: "users_created_at_idx")
+    @@index([email], map: "users_email_key", unique: true)
+    @@index([status], map: "users_status_idx")
+    @@index([username], map: "users_username_key", unique: true)
+    @@map("users")
+  }
+
+  model AuditLog {
+    id          Uuid         @id(map: "audit_logs_pkey")
+    userId      Uuid?        @map("user_id")
+    action      VarChar(100)
+    resource    VarChar(100)
+    resourceId  Uuid?        @map("resource_id")
+    description String?
+    ipAddress   VarChar(45)? @map("ip_address")
+    userAgent   String?      @map("user_agent")
+    metadata    Json?
+    createdAt   Timestamp(3) @default(now()) @map("created_at")
+    user        User?        @relation(fields:[userId], references:[id], onDelete: SetNull, onUpdate: Cascade, map: "audit_logs_user_id_fkey")
+
+    @@index([action], map: "audit_logs_action_idx")
+    @@index([createdAt], map: "audit_logs_created_at_idx")
+    @@index([resource, resourceId], map: "audit_logs_resource_resource_id_idx")
+    @@index([userId], map: "audit_logs_user_id_idx")
+    @@map("audit_logs")
+  }
+
+  model AuthCredential {
+    id                  Uuid          @id(map: "auth_credentials_pkey")
+    userId              Uuid
+    passwordHash        String        @map("password_hash")
+    emailVerifiedAt     Timestamp(3)? @map("email_verified_at")
+    lastLoginAt         Timestamp(3)? @map("last_login_at")
+    passwordChangedAt   Timestamp(3)? @map("password_changed_at")
+    failedLoginAttempts Int           @default(0) @map("failed_login_attempts")
+    lockedUntil         Timestamp(3)? @map("locked_until")
+    createdAt           Timestamp(3)  @default(now()) @map("created_at")
+    updatedAt           Timestamp(3)  @map("updated_at")
+    user                User          @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "auth_credentials_userId_fkey")
+
+    @@unique([userId], map: "auth_credentials_userId_key")
+    @@map("auth_credentials")
+  }
+
+  model AuthToken {
+    id        Uuid                   @id(map: "auth_tokens_pkey")
+    userId    Uuid
+    _type     pg.enum(AuthTokenType) @map("type")
+    token     String
+    expiresAt Timestamp(3)           @map("expires_at")
+    usedAt    Timestamp(3)?          @map("used_at")
+    createdAt Timestamp(3)           @default(now()) @map("created_at")
+    updatedAt Timestamp(3)           @map("updated_at")
+    user      User                   @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "auth_tokens_userId_fkey")
+
+    @@index([expiresAt], map: "auth_tokens_expires_at_idx")
+    @@index([token], map: "auth_tokens_token_key", unique: true)
+    @@index([_type], map: "auth_tokens_type_idx")
+    @@index([userId], map: "auth_tokens_userId_idx")
+    @@map("auth_tokens")
+  }
+
+  model Permission {
+    id              Uuid             @id(map: "permissions_pkey")
+    name            VarChar(100)
+    resource        VarChar(50)
+    action          VarChar(50)
+    description     String?
+    createdAt       Timestamp(3)     @default(now()) @map("created_at")
+    updatedAt       Timestamp(3)     @map("updated_at")
+    rolePermissions RolePermission[]
+
+    @@index([name], map: "permissions_name_key", unique: true)
+    @@index([resource, action], map: "permissions_resource_action_key", unique: true)
+    @@map("permissions")
+  }
+
+  model Role {
+    id              Uuid             @id(map: "roles_pkey")
+    name            VarChar(50)
+    description     String?
+    createdAt       Timestamp(3)     @default(now()) @map("created_at")
+    updatedAt       Timestamp(3)     @map("updated_at")
+    rolePermissions RolePermission[]
+    userRoles       UserRole[]
+
+    @@index([name], map: "roles_name_key", unique: true)
+    @@map("roles")
+  }
+
+  model RolePermission {
+    roleId       Uuid
+    permissionId Uuid
+    createdBy    Uuid?        @map("created_by")
+    createdAt    Timestamp(3) @default(now()) @map("created_at")
+    updatedAt    Timestamp(3) @map("updated_at")
+    permission   Permission   @relation(fields:[permissionId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "role_permissions_permissionId_fkey")
+    role         Role         @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "role_permissions_roleId_fkey", index: false)
+
+    @@id([roleId, permissionId], map: "role_permissions_pkey")
+    @@index([permissionId], map: "role_permissions_permissionId_idx")
+    @@map("role_permissions")
+  }
+
+  model UserProfile {
+    id            Uuid          @id(map: "user_profiles_pkey")
+    userId        Uuid
+    firstName     VarChar(100)  @map("first_name")
+    middleName    VarChar(100)? @map("middle_name")
+    lastName      VarChar(100)  @map("last_name")
+    contactNumber VarChar(30)?  @map("contact_number")
+    dateOfBirth   Date?         @map("date_of_birth")
+    avatarUrl     String?       @map("avatar_url")
+    createdAt     Timestamp(3)  @default(now()) @map("created_at")
+    updatedAt     Timestamp(3)  @map("updated_at")
+    user          User          @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "user_profiles_userId_fkey")
+
+    @@unique([userId], map: "user_profiles_userId_key")
+    @@map("user_profiles")
+  }
+
+  model UserRole {
+    userId    Uuid
+    roleId    Uuid
+    createdAt Timestamp(3) @default(now()) @map("created_at")
+    updatedAt Timestamp(3) @map("updated_at")
+    role      Role         @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "user_roles_roleId_fkey")
+    user      User         @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "user_roles_userId_fkey", index: false)
+
+    @@id([userId, roleId], map: "user_roles_pkey")
+    @@index([roleId], map: "user_roles_roleId_idx")
+    @@map("user_roles")
+  }
+
+  native_enum AuthTokenType {
+    ACCESS = "ACCESS"
+    REFRESH = "REFRESH"
+    RESET_PASSWORD = "RESET_PASSWORD"
+    VERIFY_EMAIL = "VERIFY_EMAIL"
+
+    @@map("auth_token_type")
+  }
+
+  native_enum UserStatus {
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    SUSPENDED = "SUSPENDED"
+
+    @@map("user_status")
+  }
+}
