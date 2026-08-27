@@ -322,7 +322,7 @@
                   "column": "updated_at"
                 },
                 "userId": {
-                  "column": "userId"
+                  "column": "user_id"
                 }
               },
               "namespaceId": "public",
@@ -444,7 +444,7 @@
                   "column": "used_at"
                 },
                 "userId": {
-                  "column": "userId"
+                  "column": "user_id"
                 }
               },
               "namespaceId": "public",
@@ -749,10 +749,10 @@
                   "column": "created_by"
                 },
                 "permissionId": {
-                  "column": "permissionId"
+                  "column": "permission_id"
                 },
                 "roleId": {
-                  "column": "roleId"
+                  "column": "role_id"
                 },
                 "updatedAt": {
                   "column": "updated_at"
@@ -1062,7 +1062,7 @@
                   "column": "updated_at"
                 },
                 "userId": {
-                  "column": "userId"
+                  "column": "user_id"
                 }
               },
               "namespaceId": "public",
@@ -1144,13 +1144,13 @@
                   "column": "created_at"
                 },
                 "roleId": {
-                  "column": "roleId"
+                  "column": "role_id"
                 },
                 "updatedAt": {
                   "column": "updated_at"
                 },
                 "userId": {
-                  "column": "userId"
+                  "column": "user_id"
                 }
               },
               "namespaceId": "public",
@@ -1389,7 +1389,7 @@
                     "precision": 3
                   }
                 },
-                "userId": {
+                "user_id": {
                   "codecId": "pg/uuid@1",
                   "nativeType": "uuid",
                   "nullable": false
@@ -1397,12 +1397,12 @@
               },
               "foreignKeys": [
                 {
-                  "name": "auth_credentials_userId_fkey",
+                  "name": "auth_credentials_user_id_fkey",
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
                     "columns": [
-                      "userId"
+                      "user_id"
                     ],
                     "namespaceId": "public",
                     "tableName": "auth_credentials"
@@ -1426,9 +1426,9 @@
               "uniques": [
                 {
                   "columns": [
-                    "userId"
+                    "user_id"
                   ],
-                  "name": "auth_credentials_userId_key"
+                  "name": "auth_credentials_user_id_key"
                 }
               ]
             },
@@ -1494,7 +1494,7 @@
                     "precision": 3
                   }
                 },
-                "userId": {
+                "user_id": {
                   "codecId": "pg/uuid@1",
                   "nativeType": "uuid",
                   "nullable": false
@@ -1502,12 +1502,12 @@
               },
               "foreignKeys": [
                 {
-                  "name": "auth_tokens_userId_fkey",
+                  "name": "auth_tokens_user_id_fkey",
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
                     "columns": [
-                      "userId"
+                      "user_id"
                     ],
                     "namespaceId": "public",
                     "tableName": "auth_tokens"
@@ -1545,9 +1545,9 @@
                 },
                 {
                   "columns": [
-                    "userId"
+                    "user_id"
                   ],
-                  "name": "auth_tokens_userId_idx",
+                  "name": "auth_tokens_user_id_idx",
                   "unique": false
                 }
               ],
@@ -1661,12 +1661,12 @@
                   "nativeType": "uuid",
                   "nullable": true
                 },
-                "permissionId": {
+                "permission_id": {
                   "codecId": "pg/uuid@1",
                   "nativeType": "uuid",
                   "nullable": false
                 },
-                "roleId": {
+                "role_id": {
                   "codecId": "pg/uuid@1",
                   "nativeType": "uuid",
                   "nullable": false
@@ -1682,12 +1682,12 @@
               },
               "foreignKeys": [
                 {
-                  "name": "role_permissions_permissionId_fkey",
+                  "name": "role_permissions_permission_id_fkey",
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
                     "columns": [
-                      "permissionId"
+                      "permission_id"
                     ],
                     "namespaceId": "public",
                     "tableName": "role_permissions"
@@ -1701,12 +1701,12 @@
                   }
                 },
                 {
-                  "name": "role_permissions_roleId_fkey",
+                  "name": "role_permissions_role_id_fkey",
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
                     "columns": [
-                      "roleId"
+                      "role_id"
                     ],
                     "namespaceId": "public",
                     "tableName": "role_permissions"
@@ -1723,16 +1723,16 @@
               "indexes": [
                 {
                   "columns": [
-                    "permissionId"
+                    "permission_id"
                   ],
-                  "name": "role_permissions_permissionId_idx",
+                  "name": "role_permissions_permission_id_idx",
                   "unique": false
                 }
               ],
               "primaryKey": {
                 "columns": [
-                  "roleId",
-                  "permissionId"
+                  "role_id",
+                  "permission_id"
                 ],
                 "name": "role_permissions_pkey"
               },
@@ -1866,7 +1866,7 @@
                     "precision": 3
                   }
                 },
-                "userId": {
+                "user_id": {
                   "codecId": "pg/uuid@1",
                   "nativeType": "uuid",
                   "nullable": false
@@ -1874,12 +1874,12 @@
               },
               "foreignKeys": [
                 {
-                  "name": "user_profiles_userId_fkey",
+                  "name": "user_profiles_user_id_fkey",
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
                     "columns": [
-                      "userId"
+                      "user_id"
                     ],
                     "namespaceId": "public",
                     "tableName": "user_profiles"
@@ -1903,9 +1903,9 @@
               "uniques": [
                 {
                   "columns": [
-                    "userId"
+                    "user_id"
                   ],
-                  "name": "user_profiles_userId_key"
+                  "name": "user_profiles_user_id_key"
                 }
               ]
             },
@@ -1923,7 +1923,7 @@
                     "precision": 3
                   }
                 },
-                "roleId": {
+                "role_id": {
                   "codecId": "pg/uuid@1",
                   "nativeType": "uuid",
                   "nullable": false
@@ -1936,7 +1936,7 @@
                     "precision": 3
                   }
                 },
-                "userId": {
+                "user_id": {
                   "codecId": "pg/uuid@1",
                   "nativeType": "uuid",
                   "nullable": false
@@ -1944,12 +1944,12 @@
               },
               "foreignKeys": [
                 {
-                  "name": "user_roles_roleId_fkey",
+                  "name": "user_roles_role_id_fkey",
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
                     "columns": [
-                      "roleId"
+                      "role_id"
                     ],
                     "namespaceId": "public",
                     "tableName": "user_roles"
@@ -1963,12 +1963,12 @@
                   }
                 },
                 {
-                  "name": "user_roles_userId_fkey",
+                  "name": "user_roles_user_id_fkey",
                   "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
                     "columns": [
-                      "userId"
+                      "user_id"
                     ],
                     "namespaceId": "public",
                     "tableName": "user_roles"
@@ -1985,16 +1985,16 @@
               "indexes": [
                 {
                   "columns": [
-                    "roleId"
+                    "role_id"
                   ],
-                  "name": "user_roles_roleId_idx",
+                  "name": "user_roles_role_id_idx",
                   "unique": false
                 }
               ],
               "primaryKey": {
                 "columns": [
-                  "userId",
-                  "roleId"
+                  "user_id",
+                  "role_id"
                 ],
                 "name": "user_roles_pkey"
               },
@@ -2126,7 +2126,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "01205d3b6a0bac90783d5f14163e395ff07d3572bcbe0232c6e3e1b51b7c0ec1"
+    "storageHash": "bc1df7b4976c53465c0d59777892067c167475cf5a61d090804494e886f18a48"
   },
   "capabilities": {
     "postgres": {

@@ -43,7 +43,7 @@ namespace public {
 
   model AuthCredential {
     id                  Uuid          @id(map: "auth_credentials_pkey")
-    userId              Uuid
+    userId              Uuid          @map("user_id")
     passwordHash        String        @map("password_hash")
     emailVerifiedAt     Timestamp(3)? @map("email_verified_at")
     lastLoginAt         Timestamp(3)? @map("last_login_at")
@@ -52,27 +52,27 @@ namespace public {
     lockedUntil         Timestamp(3)? @map("locked_until")
     createdAt           Timestamp(3)  @default(now()) @map("created_at")
     updatedAt           Timestamp(3)  @map("updated_at")
-    user                User          @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "auth_credentials_userId_fkey")
+    user                User          @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "auth_credentials_user_id_fkey")
 
-    @@unique([userId], map: "auth_credentials_userId_key")
+    @@unique([userId], map: "auth_credentials_user_id_key")
     @@map("auth_credentials")
   }
 
   model AuthToken {
     id        Uuid                   @id(map: "auth_tokens_pkey")
-    userId    Uuid
+    userId    Uuid                   @map("user_id")
     _type     pg.enum(AuthTokenType) @map("type")
     token     String
     expiresAt Timestamp(3)           @map("expires_at")
     usedAt    Timestamp(3)?          @map("used_at")
     createdAt Timestamp(3)           @default(now()) @map("created_at")
     updatedAt Timestamp(3)           @map("updated_at")
-    user      User                   @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "auth_tokens_userId_fkey")
+    user      User                   @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "auth_tokens_user_id_fkey")
 
     @@index([expiresAt], map: "auth_tokens_expires_at_idx")
     @@index([token], map: "auth_tokens_token_key", unique: true)
     @@index([_type], map: "auth_tokens_type_idx")
-    @@index([userId], map: "auth_tokens_userId_idx")
+    @@index([userId], map: "auth_tokens_user_id_idx")
     @@map("auth_tokens")
   }
 
@@ -105,22 +105,22 @@ namespace public {
   }
 
   model RolePermission {
-    roleId       Uuid
-    permissionId Uuid
+    roleId       Uuid         @map("role_id")
+    permissionId Uuid         @map("permission_id")
     createdBy    Uuid?        @map("created_by")
     createdAt    Timestamp(3) @default(now()) @map("created_at")
     updatedAt    Timestamp(3) @map("updated_at")
-    permission   Permission   @relation(fields:[permissionId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "role_permissions_permissionId_fkey")
-    role         Role         @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "role_permissions_roleId_fkey", index: false)
+    permission   Permission   @relation(fields:[permissionId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "role_permissions_permission_id_fkey")
+    role         Role         @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "role_permissions_role_id_fkey", index: false)
 
     @@id([roleId, permissionId], map: "role_permissions_pkey")
-    @@index([permissionId], map: "role_permissions_permissionId_idx")
+    @@index([permissionId], map: "role_permissions_permission_id_idx")
     @@map("role_permissions")
   }
 
   model UserProfile {
     id            Uuid          @id(map: "user_profiles_pkey")
-    userId        Uuid
+    userId        Uuid          @map("user_id")
     firstName     VarChar(100)  @map("first_name")
     middleName    VarChar(100)? @map("middle_name")
     lastName      VarChar(100)  @map("last_name")
@@ -129,22 +129,22 @@ namespace public {
     avatarUrl     String?       @map("avatar_url")
     createdAt     Timestamp(3)  @default(now()) @map("created_at")
     updatedAt     Timestamp(3)  @map("updated_at")
-    user          User          @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "user_profiles_userId_fkey")
+    user          User          @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "user_profiles_user_id_fkey")
 
-    @@unique([userId], map: "user_profiles_userId_key")
+    @@unique([userId], map: "user_profiles_user_id_key")
     @@map("user_profiles")
   }
 
   model UserRole {
-    userId    Uuid
-    roleId    Uuid
+    userId    Uuid         @map("user_id")
+    roleId    Uuid         @map("role_id")
     createdAt Timestamp(3) @default(now()) @map("created_at")
     updatedAt Timestamp(3) @map("updated_at")
-    role      Role         @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "user_roles_roleId_fkey")
-    user      User         @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "user_roles_userId_fkey", index: false)
+    role      Role         @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "user_roles_role_id_fkey")
+    user      User         @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade, map: "user_roles_user_id_fkey", index: false)
 
     @@id([userId, roleId], map: "user_roles_pkey")
-    @@index([roleId], map: "user_roles_roleId_idx")
+    @@index([roleId], map: "user_roles_role_id_idx")
     @@map("user_roles")
   }
 
