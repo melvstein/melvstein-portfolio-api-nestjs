@@ -9,6 +9,6 @@ export interface ApplicationConfig {
 
 export default registerAs('application', (): ApplicationConfig => ({
   environment: process.env.NODE_ENV || Environment.DEVELOPMENT,
-  name: process.env.APP_NAME || 'melvstein-portfolio-api-nestjs1234',
+  name: process.env.APP_NAME || 'Melvstein Portfolio API',
   port: parseInt(process.env.PORT ?? '3000', 10) || 3000,
 }));
