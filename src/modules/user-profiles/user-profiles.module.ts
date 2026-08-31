@@ -4,6 +4,6 @@ import { UserProfilesController } from './controller/user-profiles.controller.js
 
 @Module({
   providers: [UserProfilesService],
-  controllers: [UserProfilesController]
+  controllers: [UserProfilesController],
 })
 export class UserProfilesModule {}
