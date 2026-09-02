@@ -9,9 +9,9 @@ export interface DatabaseConfig {
 }
 
 export default registerAs('database', () => ({
-  host: process.env.DATABASE_HOST || 'localhost',
-  port: parseInt(process.env.DATABASE_PORT ?? '5432', 10) || 5432,
-  username: process.env.DATABASE_USERNAME || 'postgres',
-  password: process.env.DATABASE_PASSWORD || 'password',
-  name: process.env.DATABASE_NAME || 'mydatabase',
+  host: process.env.POSTGRES_HOST || 'localhost',
+  port: parseInt(process.env.POSTGRES_PORT ?? '5432', 10) || 5432,
+  username: process.env.POSTGRES_USER || 'postgres',
+  password: process.env.POSTGRES_PASSWORD || 'password',
+  name: process.env.POSTGRES_DB || 'mydatabase',
 }));
