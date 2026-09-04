@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/bc1df7b4976c53465c0d59777892067c167475cf5a61d090804494e886f18a48/contract';
-import endContract from '../../snapshots/bc1df7b4976c53465c0d59777892067c167475cf5a61d090804494e886f18a48/contract.json' with { type: 'json' };
+import type { Contract as End } from '../../snapshots/e5676943614b0ef6af871fa8674c69ceed7a66a447cfc4b69d15f197fd858b24/contract';
+import endContract from '../../snapshots/e5676943614b0ef6af871fa8674c69ceed7a66a447cfc4b69d15f197fd858b24/contract.json' with { type: 'json' };
 import { Migration, MigrationCLI, col, fn, lit, primaryKey } from '@prisma/orm-postgres/migration';
 
 export default class M extends Migration<never, End> {
@@ -221,24 +221,6 @@ export default class M extends Migration<never, End> {
       }),
       this.createTable({
         schema: 'public',
-        table: 'user_roles',
-        columns: [
-          col('created_at', 'timestamp(3)', {
-            notNull: true,
-            default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
-          }),
-          col('role_id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
-          col('updated_at', 'timestamp(3)', {
-            notNull: true,
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
-          }),
-          col('user_id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
-        ],
-        constraints: [primaryKey(['user_id', 'role_id'], { name: 'user_roles_pkey' })],
-      }),
-      this.createTable({
-        schema: 'public',
         table: 'users',
         columns: [
           col('created_at', 'timestamp(3)', {
@@ -251,6 +233,7 @@ export default class M extends Migration<never, End> {
             codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 255 } },
           }),
           col('id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
+          col('role_id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
           col('status', '"user_status"', {
             notNull: true,
             default: lit('ACTIVE'),
@@ -275,9 +258,45 @@ export default class M extends Migration<never, End> {
       }),
       this.addUnique({
         schema: 'public',
+        table: 'auth_tokens',
+        constraint: 'auth_tokens_token_key',
+        columns: ['token'],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'permissions',
+        constraint: 'permissions_name_key',
+        columns: ['name'],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'permissions',
+        constraint: 'permissions_resource_action_key',
+        columns: ['resource', 'action'],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'roles',
+        constraint: 'roles_name_key',
+        columns: ['name'],
+      }),
+      this.addUnique({
+        schema: 'public',
         table: 'user_profiles',
         constraint: 'user_profiles_user_id_key',
         columns: ['user_id'],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'users',
+        constraint: 'users_email_key',
+        columns: ['email'],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'users',
+        constraint: 'users_username_key',
+        columns: ['username'],
       }),
       this.createIndex({
         schema: 'public',
@@ -312,13 +331,6 @@ export default class M extends Migration<never, End> {
       this.createIndex({
         schema: 'public',
         table: 'auth_tokens',
-        index: 'auth_tokens_token_key',
-        columns: ['token'],
-        extras: { unique: true },
-      }),
-      this.createIndex({
-        schema: 'public',
-        table: 'auth_tokens',
         index: 'auth_tokens_type_idx',
         columns: ['type'],
       }),
@@ -330,36 +342,9 @@ export default class M extends Migration<never, End> {
       }),
       this.createIndex({
         schema: 'public',
-        table: 'permissions',
-        index: 'permissions_name_key',
-        columns: ['name'],
-        extras: { unique: true },
-      }),
-      this.createIndex({
-        schema: 'public',
-        table: 'permissions',
-        index: 'permissions_resource_action_key',
-        columns: ['resource', 'action'],
-        extras: { unique: true },
-      }),
-      this.createIndex({
-        schema: 'public',
         table: 'role_permissions',
         index: 'role_permissions_permission_id_idx',
         columns: ['permission_id'],
-      }),
-      this.createIndex({
-        schema: 'public',
-        table: 'roles',
-        index: 'roles_name_key',
-        columns: ['name'],
-        extras: { unique: true },
-      }),
-      this.createIndex({
-        schema: 'public',
-        table: 'user_roles',
-        index: 'user_roles_role_id_idx',
-        columns: ['role_id'],
       }),
       this.createIndex({
         schema: 'public',
@@ -370,22 +355,14 @@ export default class M extends Migration<never, End> {
       this.createIndex({
         schema: 'public',
         table: 'users',
-        index: 'users_email_key',
-        columns: ['email'],
-        extras: { unique: true },
+        index: 'users_role_id_idx_d9467c50',
+        columns: ['role_id'],
       }),
       this.createIndex({
         schema: 'public',
         table: 'users',
         index: 'users_status_idx',
         columns: ['status'],
-      }),
-      this.createIndex({
-        schema: 'public',
-        table: 'users',
-        index: 'users_username_key',
-        columns: ['username'],
-        extras: { unique: true },
       }),
       this.addForeignKey({
         schema: 'public',
@@ -424,9 +401,9 @@ export default class M extends Migration<never, End> {
         schema: 'public',
         table: 'role_permissions',
         foreignKey: {
-          name: 'role_permissions_permission_id_fkey',
-          columns: ['permission_id'],
-          references: { schema: 'public', table: 'permissions', columns: ['id'] },
+          name: 'role_permissions_role_id_fkey',
+          columns: ['role_id'],
+          references: { schema: 'public', table: 'roles', columns: ['id'] },
           onDelete: 'cascade',
           onUpdate: 'cascade',
         },
@@ -435,9 +412,9 @@ export default class M extends Migration<never, End> {
         schema: 'public',
         table: 'role_permissions',
         foreignKey: {
-          name: 'role_permissions_role_id_fkey',
-          columns: ['role_id'],
-          references: { schema: 'public', table: 'roles', columns: ['id'] },
+          name: 'role_permissions_permission_id_fkey',
+          columns: ['permission_id'],
+          references: { schema: 'public', table: 'permissions', columns: ['id'] },
           onDelete: 'cascade',
           onUpdate: 'cascade',
         },
@@ -455,22 +432,11 @@ export default class M extends Migration<never, End> {
       }),
       this.addForeignKey({
         schema: 'public',
-        table: 'user_roles',
+        table: 'users',
         foreignKey: {
-          name: 'user_roles_role_id_fkey',
+          name: 'users_role_id_fkey',
           columns: ['role_id'],
           references: { schema: 'public', table: 'roles', columns: ['id'] },
-          onDelete: 'cascade',
-          onUpdate: 'cascade',
-        },
-      }),
-      this.addForeignKey({
-        schema: 'public',
-        table: 'user_roles',
-        foreignKey: {
-          name: 'user_roles_user_id_fkey',
-          columns: ['user_id'],
-          references: { schema: 'public', table: 'users', columns: ['id'] },
           onDelete: 'cascade',
           onUpdate: 'cascade',
         },

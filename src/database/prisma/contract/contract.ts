@@ -1,5 +1,9 @@
 import { defineContract } from '@prisma/orm-postgres/contract-builder';
 
+export type Options = {
+  extensionPacks?: any[];
+};
+
 export const contract = defineContract({}, ({ field, model, rel }) => {
   const User = model('User', {
     fields: {
