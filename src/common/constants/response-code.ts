@@ -2,14 +2,19 @@ import { HttpStatus } from '@nestjs/common';
 
 export const ResponseCode = {
   SUCCESS: {
-    code: 0,
+    code: 'SUCCESS',
     message: 'Success',
     httpStatus: HttpStatus.OK,
   },
-  ERROR: {
-    code: 1,
-    message: 'Error',
+  INTERNAL_SERVER_ERROR: {
+    code: 'INTERNAL_SERVER_ERROR',
+    message: 'Internal Server Error',
     httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+  },
+  DUPLICATE_ENTRY: {
+    code: 'DUPLICATE_ENTRY',
+    message: 'Duplicate Entry',
+    httpStatus: HttpStatus.CONFLICT,
   },
 } as const;
 

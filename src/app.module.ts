@@ -1,15 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './core/auth/auth.module.js';
-import { UsersModule } from './modules/users/users.module.js';
-import { RolesModule } from './modules/roles/roles.module.js';
 import { z } from 'zod';
 import { Environment } from './common/enums/environment.enum.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { UserProfilesModule } from './modules/user-profiles/user-profiles.module.js';
 import { ConfigModule } from '@nestjs/config';
 import databaseConfig from './config/database.config.js';
 import applicationConfig from './config/application.config.js';
+import { AuthModule } from './core/auth/auth.module.js';
+import { RoleModule } from './modules/role/role.module.js';
+import { UserModule } from './modules/user/user.module.js';
 
 const validationSchema = z.object({
   APP_NAME: z.string().trim().min(1, 'APP_NAME is required'),
@@ -29,9 +28,8 @@ const validationSchema = z.object({
       // cache: true,
     }),
     AuthModule,
-    UsersModule,
-    UserProfilesModule,
-    RolesModule,
+    RoleModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

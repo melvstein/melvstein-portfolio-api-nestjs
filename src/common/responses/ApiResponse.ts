@@ -1,7 +1,7 @@
-import { TResponseCode, ResponseCode } from './constants/response-code.js';
+import { TResponseCode, ResponseCode } from '../constants/response-code.js';
 
 export class ApiResponse<T> {
-  private readonly code!: number;
+  private readonly code!: string;
   private readonly message?: string;
   private readonly data?: T;
 
@@ -19,6 +19,6 @@ export class ApiResponse<T> {
   }
 
   static internalServerError<T>(): ApiResponse<T> {
-    return new ApiResponse<T>(ResponseCode.ERROR);
+    return new ApiResponse<T>(ResponseCode.INTERNAL_SERVER_ERROR);
   }
 }
