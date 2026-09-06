@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
+import { AuthModule } from './core/auth/auth.module.js';
+import { UsersModule } from './modules/users/users.module.js';
+import { RolesModule } from './modules/roles/roles.module.js';
 import { z } from 'zod';
 import { Environment } from './common/enums/environment.enum.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { AuthModule } from './core/auth/auth.module.js';
-import { UsersModule } from './modules/users/users.module.js';
 import { UserProfilesModule } from './modules/user-profiles/user-profiles.module.js';
 import { ConfigModule } from '@nestjs/config';
 import databaseConfig from './config/database.config.js';
@@ -18,9 +19,6 @@ const validationSchema = z.object({
 
 @Module({
   imports: [
-    AuthModule,
-    UsersModule,
-    UserProfilesModule,
     ConfigModule.forRoot({
       validationSchema,
       envFilePath:
@@ -30,6 +28,10 @@ const validationSchema = z.object({
       expandVariables: true,
       // cache: true,
     }),
+    AuthModule,
+    UsersModule,
+    UserProfilesModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

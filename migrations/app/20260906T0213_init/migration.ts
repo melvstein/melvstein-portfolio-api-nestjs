@@ -1,7 +1,15 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/e5676943614b0ef6af871fa8674c69ceed7a66a447cfc4b69d15f197fd858b24/contract';
-import endContract from '../../snapshots/e5676943614b0ef6af871fa8674c69ceed7a66a447cfc4b69d15f197fd858b24/contract.json' with { type: 'json' };
-import { Migration, MigrationCLI, col, fn, lit, primaryKey } from '@prisma/orm-postgres/migration';
+import type { Contract as End } from '../../snapshots/89912ae9722d4a91da22f8bec5783e89da946a76eb36a6227d8f9630e2d1384c/contract';
+import endContract from '../../snapshots/89912ae9722d4a91da22f8bec5783e89da946a76eb36a6227d8f9630e2d1384c/contract.json' with { type: 'json' };
+import {
+  Migration,
+  MigrationCLI,
+  checkExpression,
+  col,
+  fn,
+  lit,
+  primaryKey,
+} from '@prisma/orm-postgres/migration';
 
 export default class M extends Migration<never, End> {
   override readonly endContractJson = endContract;
@@ -9,56 +17,43 @@ export default class M extends Migration<never, End> {
   override get operations() {
     return [
       this.createSchema({ schema: 'public' }),
-      this.createNativeEnumType({
-        schema: 'public',
-        typeName: 'auth_token_type',
-        members: ['ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL'],
-      }),
-      this.createNativeEnumType({
-        schema: 'public',
-        typeName: 'user_status',
-        members: ['ACTIVE', 'INACTIVE', 'SUSPENDED'],
-      }),
       this.createTable({
         schema: 'public',
         table: 'audit_logs',
         columns: [
-          col('action', 'character varying(100)', {
-            notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 100 } },
-          }),
-          col('created_at', 'timestamp(3)', {
+          col('action', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('created_at', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('description', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
-          col('ip_address', 'character varying(45)', {
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 45 } },
-          }),
+          col('ip_address', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('metadata', 'json', { codecRef: { codecId: 'pg/json@1' } }),
-          col('resource', 'character varying(100)', {
-            notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 100 } },
-          }),
+          col('resource', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('resource_id', 'uuid', { codecRef: { codecId: 'pg/uuid@1' } }),
+          col('updated_at', 'timestamptz', {
+            notNull: true,
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
+          }),
           col('user_agent', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('user_id', 'uuid', { codecRef: { codecId: 'pg/uuid@1' } }),
         ],
-        constraints: [primaryKey(['id'], { name: 'audit_logs_pkey' })],
+        constraints: [primaryKey(['id'])],
       }),
       this.createTable({
         schema: 'public',
         table: 'auth_credentials',
         columns: [
-          col('created_at', 'timestamp(3)', {
+          col('created_at', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('email_verified_at', 'timestamp(3)', {
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+          col('email_verified_at', 'timestamptz', {
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('failed_login_attempts', 'int4', {
             notNull: true,
@@ -66,99 +61,95 @@ export default class M extends Migration<never, End> {
             codecRef: { codecId: 'pg/int4@1' },
           }),
           col('id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
-          col('last_login_at', 'timestamp(3)', {
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+          col('last_login_at', 'timestamptz', {
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('locked_until', 'timestamp(3)', {
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+          col('locked_until', 'timestamptz', {
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('password_changed_at', 'timestamp(3)', {
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+          col('password_changed_at', 'timestamptz', {
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('password_hash', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('updated_at', 'timestamp(3)', {
+          col('updated_at', 'timestamptz', {
             notNull: true,
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('user_id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
         ],
-        constraints: [primaryKey(['id'], { name: 'auth_credentials_pkey' })],
+        constraints: [primaryKey(['id'])],
       }),
       this.createTable({
         schema: 'public',
         table: 'auth_tokens',
         columns: [
-          col('created_at', 'timestamp(3)', {
+          col('created_at', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('expires_at', 'timestamp(3)', {
+          col('expires_at', 'timestamptz', {
             notNull: true,
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
           col('token', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('type', '"auth_token_type"', {
+          col('type', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('updated_at', 'timestamptz', {
             notNull: true,
-            codecRef: { codecId: 'pg/enum@1', typeParams: { typeName: 'auth_token_type' } },
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('updated_at', 'timestamp(3)', {
-            notNull: true,
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
-          }),
-          col('used_at', 'timestamp(3)', {
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
-          }),
+          col('used_at', 'timestamptz', { codecRef: { codecId: 'pg/timestamptz-temporal@1' } }),
           col('user_id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
         ],
-        constraints: [primaryKey(['id'], { name: 'auth_tokens_pkey' })],
+        constraints: [
+          primaryKey(['id']),
+          checkExpression(
+            'auth_tokens_type_check_c4a33696',
+            "\"type\" IN ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL')",
+          ),
+        ],
       }),
       this.createTable({
         schema: 'public',
         table: 'permissions',
         columns: [
-          col('action', 'character varying(50)', {
-            notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 50 } },
-          }),
-          col('created_at', 'timestamp(3)', {
+          col('action', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('created_at', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('description', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
-          col('name', 'character varying(100)', {
+          col('name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('resource', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('updated_at', 'timestamptz', {
             notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 100 } },
-          }),
-          col('resource', 'character varying(50)', {
-            notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 50 } },
-          }),
-          col('updated_at', 'timestamp(3)', {
-            notNull: true,
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
         ],
-        constraints: [primaryKey(['id'], { name: 'permissions_pkey' })],
+        constraints: [primaryKey(['id'])],
       }),
       this.createTable({
         schema: 'public',
         table: 'role_permissions',
         columns: [
-          col('created_at', 'timestamp(3)', {
+          col('created_at', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('created_by', 'uuid', { codecRef: { codecId: 'pg/uuid@1' } }),
           col('permission_id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
           col('role_id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
-          col('updated_at', 'timestamp(3)', {
+          col('updated_at', 'timestamptz', {
             notNull: true,
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
         ],
         constraints: [primaryKey(['role_id', 'permission_id'], { name: 'role_permissions_pkey' })],
@@ -167,88 +158,78 @@ export default class M extends Migration<never, End> {
         schema: 'public',
         table: 'roles',
         columns: [
-          col('created_at', 'timestamp(3)', {
+          col('createdAt', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('description', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
-          col('name', 'character varying(50)', {
+          col('name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('updatedAt', 'timestamptz', {
             notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 50 } },
-          }),
-          col('updated_at', 'timestamp(3)', {
-            notNull: true,
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
         ],
-        constraints: [primaryKey(['id'], { name: 'roles_pkey' })],
+        constraints: [primaryKey(['id'])],
       }),
       this.createTable({
         schema: 'public',
         table: 'user_profiles',
         columns: [
           col('avatar_url', 'text', { codecRef: { codecId: 'pg/text@1' } }),
-          col('contact_number', 'character varying(30)', {
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 30 } },
-          }),
-          col('created_at', 'timestamp(3)', {
+          col('contact_number', 'text', { codecRef: { codecId: 'pg/text@1' } }),
+          col('created_at', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('date_of_birth', 'date', { codecRef: { codecId: 'pg/date-temporal@1' } }),
-          col('first_name', 'character varying(100)', {
-            notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 100 } },
-          }),
+          col('first_name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
-          col('last_name', 'character varying(100)', {
+          col('last_name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('middle_name', 'text', { codecRef: { codecId: 'pg/text@1' } }),
+          col('updated_at', 'timestamptz', {
             notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 100 } },
-          }),
-          col('middle_name', 'character varying(100)', {
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 100 } },
-          }),
-          col('updated_at', 'timestamp(3)', {
-            notNull: true,
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('user_id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
         ],
-        constraints: [primaryKey(['id'], { name: 'user_profiles_pkey' })],
+        constraints: [primaryKey(['id'])],
       }),
       this.createTable({
         schema: 'public',
         table: 'users',
         columns: [
-          col('created_at', 'timestamp(3)', {
+          col('created_at', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('email', 'character varying(255)', {
-            notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 255 } },
-          }),
+          col('email', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
           col('role_id', 'uuid', { notNull: true, codecRef: { codecId: 'pg/uuid@1' } }),
-          col('status', '"user_status"', {
+          col('status', 'text', {
             notNull: true,
             default: lit('ACTIVE'),
-            codecRef: { codecId: 'pg/enum@1', typeParams: { typeName: 'user_status' } },
+            codecRef: { codecId: 'pg/text@1' },
           }),
-          col('updated_at', 'timestamp(3)', {
+          col('updated_at', 'timestamptz', {
             notNull: true,
-            codecRef: { codecId: 'pg/timestamp-temporal@1', typeParams: { precision: 3 } },
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('username', 'character varying(50)', {
-            notNull: true,
-            codecRef: { codecId: 'sql/varchar@1', typeParams: { length: 50 } },
-          }),
+          col('username', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
-        constraints: [primaryKey(['id'], { name: 'users_pkey' })],
+        constraints: [
+          primaryKey(['id']),
+          checkExpression(
+            'users_status_check_a34ffd8e',
+            "\"status\" IN ('ACTIVE', 'INACTIVE', 'SUSPENDED')",
+          ),
+        ],
       }),
       this.addUnique({
         schema: 'public',
@@ -289,14 +270,14 @@ export default class M extends Migration<never, End> {
       this.addUnique({
         schema: 'public',
         table: 'users',
-        constraint: 'users_email_key',
-        columns: ['email'],
+        constraint: 'users_username_key',
+        columns: ['username'],
       }),
       this.addUnique({
         schema: 'public',
         table: 'users',
-        constraint: 'users_username_key',
-        columns: ['username'],
+        constraint: 'users_email_key',
+        columns: ['email'],
       }),
       this.createIndex({
         schema: 'public',
@@ -345,6 +326,12 @@ export default class M extends Migration<never, End> {
         table: 'role_permissions',
         index: 'role_permissions_permission_id_idx',
         columns: ['permission_id'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'role_permissions',
+        index: 'role_permissions_role_id_idx_d9467c50',
+        columns: ['role_id'],
       }),
       this.createIndex({
         schema: 'public',

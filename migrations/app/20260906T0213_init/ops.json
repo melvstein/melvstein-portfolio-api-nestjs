@@ -17,50 +17,6 @@
     "postcheck": []
   },
   {
-    "id": "createNativeEnumType.auth_token_type",
-    "label": "Create enum type \"auth_token_type\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "type",
-        "name": "auth_token_type"
-      }
-    },
-    "precheck": [],
-    "execute": [
-      {
-        "description": "create enum type \"auth_token_type\"",
-        "sql": "CREATE TYPE \"public\".\"auth_token_type\" AS ENUM ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL')",
-        "params": []
-      }
-    ],
-    "postcheck": []
-  },
-  {
-    "id": "createNativeEnumType.user_status",
-    "label": "Create enum type \"user_status\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "type",
-        "name": "user_status"
-      }
-    },
-    "precheck": [],
-    "execute": [
-      {
-        "description": "create enum type \"user_status\"",
-        "sql": "CREATE TYPE \"public\".\"user_status\" AS ENUM ('ACTIVE', 'INACTIVE', 'SUSPENDED')",
-        "params": []
-      }
-    ],
-    "postcheck": []
-  },
-  {
     "id": "table.audit_logs",
     "label": "Create table \"audit_logs\"",
     "summary": "Creates table \"audit_logs\"",
@@ -85,7 +41,7 @@
     "execute": [
       {
         "description": "create table \"audit_logs\"",
-        "sql": "CREATE TABLE \"public\".\"audit_logs\" (\n  \"action\" character varying(100) NOT NULL,\n  \"created_at\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"ip_address\" character varying(45),\n  \"metadata\" json,\n  \"resource\" character varying(100) NOT NULL,\n  \"resource_id\" uuid,\n  \"user_agent\" text,\n  \"user_id\" uuid,\n  CONSTRAINT \"audit_logs_pkey\" PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"audit_logs\" (\n  \"action\" text NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"ip_address\" text,\n  \"metadata\" json,\n  \"resource\" text NOT NULL,\n  \"resource_id\" uuid,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"user_agent\" text,\n  \"user_id\" uuid,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -124,7 +80,7 @@
     "execute": [
       {
         "description": "create table \"auth_credentials\"",
-        "sql": "CREATE TABLE \"public\".\"auth_credentials\" (\n  \"created_at\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"email_verified_at\" timestamp(3),\n  \"failed_login_attempts\" int4 DEFAULT 0 NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_login_at\" timestamp(3),\n  \"locked_until\" timestamp(3),\n  \"password_changed_at\" timestamp(3),\n  \"password_hash\" text NOT NULL,\n  \"updated_at\" timestamp(3) NOT NULL,\n  \"user_id\" uuid NOT NULL,\n  CONSTRAINT \"auth_credentials_pkey\" PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"auth_credentials\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email_verified_at\" timestamptz,\n  \"failed_login_attempts\" int4 DEFAULT 0 NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_login_at\" timestamptz,\n  \"locked_until\" timestamptz,\n  \"password_changed_at\" timestamptz,\n  \"password_hash\" text NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -163,7 +119,7 @@
     "execute": [
       {
         "description": "create table \"auth_tokens\"",
-        "sql": "CREATE TABLE \"public\".\"auth_tokens\" (\n  \"created_at\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"expires_at\" timestamp(3) NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"token\" text NOT NULL,\n  \"type\" \"auth_token_type\" NOT NULL,\n  \"updated_at\" timestamp(3) NOT NULL,\n  \"used_at\" timestamp(3),\n  \"user_id\" uuid NOT NULL,\n  CONSTRAINT \"auth_tokens_pkey\" PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"auth_tokens\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"expires_at\" timestamptz NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"token\" text NOT NULL,\n  \"type\" text NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"used_at\" timestamptz,\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"auth_tokens_type_check_c4a33696\" CHECK (\"type\" IN ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL'))\n)",
         "params": []
       }
     ],
@@ -202,7 +158,7 @@
     "execute": [
       {
         "description": "create table \"permissions\"",
-        "sql": "CREATE TABLE \"public\".\"permissions\" (\n  \"action\" character varying(50) NOT NULL,\n  \"created_at\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" character varying(100) NOT NULL,\n  \"resource\" character varying(50) NOT NULL,\n  \"updated_at\" timestamp(3) NOT NULL,\n  CONSTRAINT \"permissions_pkey\" PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"permissions\" (\n  \"action\" text NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" text NOT NULL,\n  \"resource\" text NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -241,7 +197,7 @@
     "execute": [
       {
         "description": "create table \"role_permissions\"",
-        "sql": "CREATE TABLE \"public\".\"role_permissions\" (\n  \"created_at\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"created_by\" uuid,\n  \"permission_id\" uuid NOT NULL,\n  \"role_id\" uuid NOT NULL,\n  \"updated_at\" timestamp(3) NOT NULL,\n  CONSTRAINT \"role_permissions_pkey\" PRIMARY KEY (\"role_id\", \"permission_id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"role_permissions\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"created_by\" uuid,\n  \"permission_id\" uuid NOT NULL,\n  \"role_id\" uuid NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  CONSTRAINT \"role_permissions_pkey\" PRIMARY KEY (\"role_id\", \"permission_id\")\n)",
         "params": []
       }
     ],
@@ -280,7 +236,7 @@
     "execute": [
       {
         "description": "create table \"roles\"",
-        "sql": "CREATE TABLE \"public\".\"roles\" (\n  \"created_at\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" character varying(50) NOT NULL,\n  \"updated_at\" timestamp(3) NOT NULL,\n  CONSTRAINT \"roles_pkey\" PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"roles\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -319,7 +275,7 @@
     "execute": [
       {
         "description": "create table \"user_profiles\"",
-        "sql": "CREATE TABLE \"public\".\"user_profiles\" (\n  \"avatar_url\" text,\n  \"contact_number\" character varying(30),\n  \"created_at\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"date_of_birth\" date,\n  \"first_name\" character varying(100) NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_name\" character varying(100) NOT NULL,\n  \"middle_name\" character varying(100),\n  \"updated_at\" timestamp(3) NOT NULL,\n  \"user_id\" uuid NOT NULL,\n  CONSTRAINT \"user_profiles_pkey\" PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"user_profiles\" (\n  \"avatar_url\" text,\n  \"contact_number\" text,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"date_of_birth\" date,\n  \"first_name\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_name\" text NOT NULL,\n  \"middle_name\" text,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -358,7 +314,7 @@
     "execute": [
       {
         "description": "create table \"users\"",
-        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"created_at\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"email\" character varying(255) NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"role_id\" uuid NOT NULL,\n  \"status\" \"user_status\" DEFAULT 'ACTIVE'::\"user_status\" NOT NULL,\n  \"updated_at\" timestamp(3) NOT NULL,\n  \"username\" character varying(50) NOT NULL,\n  CONSTRAINT \"users_pkey\" PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"role_id\" uuid NOT NULL,\n  \"status\" text DEFAULT 'ACTIVE' NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"username\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"users_status_check_a34ffd8e\" CHECK (\"status\" IN ('ACTIVE', 'INACTIVE', 'SUSPENDED'))\n)",
         "params": []
       }
     ],
@@ -625,48 +581,6 @@
     ]
   },
   {
-    "id": "unique.users.users_email_key",
-    "label": "Add unique constraint on \"users\" (email)",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "unique",
-        "name": "users_email_key",
-        "table": "users"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure constraint \"users_email_key\" does not exist",
-        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "users_email_key",
-          "public",
-          "\"public\".\"users\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "add unique constraint \"users_email_key\"",
-        "sql": "ALTER TABLE \"public\".\"users\" ADD CONSTRAINT \"users_email_key\" UNIQUE (\"email\")"
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify constraint \"users_email_key\" exists",
-        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "users_email_key",
-          "public",
-          "\"public\".\"users\""
-        ]
-      }
-    ]
-  },
-  {
     "id": "unique.users.users_username_key",
     "label": "Add unique constraint on \"users\" (username)",
     "operationClass": "additive",
@@ -702,6 +616,48 @@
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
         "params": [
           "users_username_key",
+          "public",
+          "\"public\".\"users\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.users.users_email_key",
+    "label": "Add unique constraint on \"users\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "users_email_key",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"users_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_email_key",
+          "public",
+          "\"public\".\"users\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"users_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD CONSTRAINT \"users_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"users_email_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_email_key",
           "public",
           "\"public\".\"users\""
         ]
@@ -1016,6 +972,45 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"role_permissions_permission_id_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.role_permissions.role_permissions_role_id_idx_d9467c50",
+    "label": "Create index \"role_permissions_role_id_idx_d9467c50\" on \"role_permissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "role_permissions_role_id_idx_d9467c50",
+        "table": "role_permissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"role_permissions_role_id_idx_d9467c50\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"role_permissions_role_id_idx_d9467c50\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"role_permissions_role_id_idx_d9467c50\"",
+        "sql": "CREATE INDEX \"role_permissions_role_id_idx_d9467c50\" ON \"public\".\"role_permissions\" (\"role_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"role_permissions_role_id_idx_d9467c50\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"role_permissions_role_id_idx_d9467c50\""
         ]
       }
     ]
