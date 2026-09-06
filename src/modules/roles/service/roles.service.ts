@@ -3,18 +3,19 @@ import { CreateRoleRequestDto } from '../dto/create-role.request.dto.js';
 import { UpdateRoleRequestDto } from '../dto/update-role.request.dto.js';
 import { ApiResponse } from 'src/common/ApiResponse.js';
 import { db } from '../../../database/prisma/db.js';
+import { Role } from '../interfaces/role.interface.js';
 
 @Injectable()
 export class RolesService {
-  create(request: CreateRoleRequestDto) {
+  create(request: CreateRoleRequestDto): Promise<Role> {
     return db.orm.public.Role.create({
       name: request.name,
       description: request.description,
-    });
+    }) as Promise<Role>;
   }
 
   findAll() {
-    return db.orm.public.Role.all();
+    return null;
   }
 
   findOne(id: number) {

@@ -41,7 +41,7 @@
     "execute": [
       {
         "description": "create table \"audit_logs\"",
-        "sql": "CREATE TABLE \"public\".\"audit_logs\" (\n  \"action\" text NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"ip_address\" text,\n  \"metadata\" json,\n  \"resource\" text NOT NULL,\n  \"resource_id\" uuid,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"user_agent\" text,\n  \"user_id\" uuid,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"audit_logs\" (\n  \"action\" text NOT NULL,\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"ip_address\" text,\n  \"metadata\" json,\n  \"resource\" text NOT NULL,\n  \"resource_id\" uuid,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"user_agent\" text,\n  \"user_id\" uuid,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -80,7 +80,7 @@
     "execute": [
       {
         "description": "create table \"auth_credentials\"",
-        "sql": "CREATE TABLE \"public\".\"auth_credentials\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email_verified_at\" timestamptz,\n  \"failed_login_attempts\" int4 DEFAULT 0 NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_login_at\" timestamptz,\n  \"locked_until\" timestamptz,\n  \"password_changed_at\" timestamptz,\n  \"password_hash\" text NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"auth_credentials\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email_verified_at\" timestamptz(3),\n  \"failed_login_attempts\" int4 DEFAULT 0 NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_login_at\" timestamptz(3),\n  \"locked_until\" timestamptz(3),\n  \"password_changed_at\" timestamptz(3),\n  \"password_hash\" text NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -119,7 +119,7 @@
     "execute": [
       {
         "description": "create table \"auth_tokens\"",
-        "sql": "CREATE TABLE \"public\".\"auth_tokens\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"expires_at\" timestamptz NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"token\" text NOT NULL,\n  \"type\" text NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"used_at\" timestamptz,\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"auth_tokens_type_check_c4a33696\" CHECK (\"type\" IN ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL'))\n)",
+        "sql": "CREATE TABLE \"public\".\"auth_tokens\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"expires_at\" timestamptz(3) NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"token\" text NOT NULL,\n  \"type\" text NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"used_at\" timestamptz(3),\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"auth_tokens_type_check_c4a33696\" CHECK (\"type\" IN ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL'))\n)",
         "params": []
       }
     ],
@@ -158,7 +158,7 @@
     "execute": [
       {
         "description": "create table \"permissions\"",
-        "sql": "CREATE TABLE \"public\".\"permissions\" (\n  \"action\" text NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" text NOT NULL,\n  \"resource\" text NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"permissions\" (\n  \"action\" text NOT NULL,\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" text NOT NULL,\n  \"resource\" text NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -197,7 +197,7 @@
     "execute": [
       {
         "description": "create table \"role_permissions\"",
-        "sql": "CREATE TABLE \"public\".\"role_permissions\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"created_by\" uuid,\n  \"permission_id\" uuid NOT NULL,\n  \"role_id\" uuid NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  CONSTRAINT \"role_permissions_pkey\" PRIMARY KEY (\"role_id\", \"permission_id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"role_permissions\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"created_by\" uuid,\n  \"permission_id\" uuid NOT NULL,\n  \"role_id\" uuid NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  CONSTRAINT \"role_permissions_pkey\" PRIMARY KEY (\"role_id\", \"permission_id\")\n)",
         "params": []
       }
     ],
@@ -236,7 +236,7 @@
     "execute": [
       {
         "description": "create table \"roles\"",
-        "sql": "CREATE TABLE \"public\".\"roles\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"roles\" (\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -275,7 +275,7 @@
     "execute": [
       {
         "description": "create table \"user_profiles\"",
-        "sql": "CREATE TABLE \"public\".\"user_profiles\" (\n  \"avatar_url\" text,\n  \"contact_number\" text,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"date_of_birth\" date,\n  \"first_name\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_name\" text NOT NULL,\n  \"middle_name\" text,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"user_profiles\" (\n  \"avatar_url\" text,\n  \"contact_number\" text,\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"date_of_birth\" date,\n  \"first_name\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_name\" text NOT NULL,\n  \"middle_name\" text,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -314,7 +314,7 @@
     "execute": [
       {
         "description": "create table \"users\"",
-        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"role_id\" uuid NOT NULL,\n  \"status\" text DEFAULT 'ACTIVE' NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"username\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"users_status_check_a34ffd8e\" CHECK (\"status\" IN ('ACTIVE', 'INACTIVE', 'SUSPENDED'))\n)",
+        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"role_id\" uuid NOT NULL,\n  \"status\" text DEFAULT 'ACTIVE' NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"username\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"users_status_check_a34ffd8e\" CHECK (\"status\" IN ('ACTIVE', 'INACTIVE', 'SUSPENDED'))\n)",
         "params": []
       }
     ],

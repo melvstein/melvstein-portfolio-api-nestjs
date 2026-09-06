@@ -20,30 +20,30 @@ enum UserStatus {
 
 namespace public {
   model Role {
-    id              Uuid             @id @default(uuid())
-    name            String           @unique
+    id              Uuid                 @id @default(uuid())
+    name            String               @unique
     description     String?
-    createdAt       DateTime         @default(now())
-    updatedAt       DateTime         @default(now())
+    createdAt       TimestamptzString(3) @default(now())
+    updatedAt       TimestamptzString(3) @default(now())
     rolePermissions RolePermission[]
 
     @@map("roles")
   }
 
   model User {
-    id             Uuid            @id @default(uuid())
-    roleId         Uuid            @map("role_id")
-    username       String          @unique
-    email          String          @unique
-    status         UserStatus      @default(ACTIVE)
-    createdAt      DateTime        @default(now()) @map("created_at")
-    updatedAt      DateTime        @default(now()) @map("updated_at")
+    id             Uuid                 @id @default(uuid())
+    roleId         Uuid                 @map("role_id")
+    username       String               @unique
+    email          String               @unique
+    status         UserStatus           @default(ACTIVE)
+    createdAt      TimestamptzString(3) @default(now()) @map("created_at")
+    updatedAt      TimestamptzString(3) @default(now()) @map("updated_at")
     auditLogs      AuditLog[]
     authCredential AuthCredential?
     authTokens     AuthToken[]
     userProfile    UserProfile?
 
-    role           Role            @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade)
+    role           Role                 @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([status], map: "users_status_idx")
     @@index([createdAt], map: "users_created_at_idx")
@@ -51,50 +51,50 @@ namespace public {
   }
 
   model UserProfile {
-    id            Uuid     @id @default(uuid())
-    userId        Uuid     @unique @map("user_id")
-    firstName     String   @map("first_name")
-    middleName    String?  @map("middle_name")
-    lastName      String   @map("last_name")
-    contactNumber String?  @map("contact_number")
-    dateOfBirth   Date?    @map("date_of_birth")
-    avatarUrl     String?  @map("avatar_url")
-    createdAt     DateTime @default(now()) @map("created_at")
-    updatedAt     DateTime @default(now()) @map("updated_at")
+    id            Uuid                 @id @default(uuid())
+    userId        Uuid                 @unique @map("user_id")
+    firstName     String               @map("first_name")
+    middleName    String?              @map("middle_name")
+    lastName      String               @map("last_name")
+    contactNumber String?              @map("contact_number")
+    dateOfBirth   DateString?          @map("date_of_birth")
+    avatarUrl     String?              @map("avatar_url")
+    createdAt     TimestamptzString(3) @default(now()) @map("created_at")
+    updatedAt     TimestamptzString(3) @default(now()) @map("updated_at")
 
-    user          User     @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade)
+    user          User                 @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade)
 
     @@map("user_profiles")
   }
 
   model AuthCredential {
-    id                  Uuid      @id @default(uuid())
-    userId              Uuid      @unique @map("user_id")
-    passwordHash        String    @map("password_hash")
-    emailVerifiedAt     DateTime? @map("email_verified_at")
-    lastLoginAt         DateTime? @map("last_login_at")
-    passwordChangedAt   DateTime? @map("password_changed_at")
-    failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
-    lockedUntil         DateTime? @map("locked_until")
-    createdAt           DateTime  @default(now()) @map("created_at")
-    updatedAt           DateTime  @default(now()) @map("updated_at")
+    id                  Uuid                  @id @default(uuid())
+    userId              Uuid                  @unique @map("user_id")
+    passwordHash        String                @map("password_hash")
+    emailVerifiedAt     TimestamptzString(3)? @map("email_verified_at")
+    lastLoginAt         TimestamptzString(3)? @map("last_login_at")
+    passwordChangedAt   TimestamptzString(3)? @map("password_changed_at")
+    failedLoginAttempts Int                   @default(0) @map("failed_login_attempts")
+    lockedUntil         TimestamptzString(3)? @map("locked_until")
+    createdAt           TimestamptzString(3)  @default(now()) @map("created_at")
+    updatedAt           TimestamptzString(3)  @default(now()) @map("updated_at")
 
-    user                User      @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade)
+    user                User                  @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade)
 
     @@map("auth_credentials")
   }
 
   model AuthToken {
-    id        Uuid          @id @default(uuid())
-    userId    Uuid          @map("user_id")
-    _type     AuthTokenType @map("type")
-    token     String        @unique
-    expiresAt DateTime      @map("expires_at")
-    usedAt    DateTime?     @map("used_at")
-    createdAt DateTime      @default(now()) @map("created_at")
-    updatedAt DateTime      @default(now()) @map("updated_at")
+    id        Uuid                  @id @default(uuid())
+    userId    Uuid                  @map("user_id")
+    _type     AuthTokenType         @map("type")
+    token     String                @unique
+    expiresAt TimestamptzString(3)  @map("expires_at")
+    usedAt    TimestamptzString(3)? @map("used_at")
+    createdAt TimestamptzString(3)  @default(now()) @map("created_at")
+    updatedAt TimestamptzString(3)  @default(now()) @map("updated_at")
 
-    user      User          @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade)
+    user      User                  @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([expiresAt], map: "auth_tokens_expires_at_idx")
     @@index([_type], map: "auth_tokens_type_idx")
@@ -103,13 +103,13 @@ namespace public {
   }
 
   model Permission {
-    id              Uuid             @id @default(uuid())
-    name            String           @unique
+    id              Uuid                 @id @default(uuid())
+    name            String               @unique
     resource        String
     action          String
     description     String?
-    createdAt       DateTime         @default(now()) @map("created_at")
-    updatedAt       DateTime         @default(now()) @map("updated_at")
+    createdAt       TimestamptzString(3) @default(now()) @map("created_at")
+    updatedAt       TimestamptzString(3) @default(now()) @map("updated_at")
     rolePermissions RolePermission[]
 
     @@unique([resource, action], map: "permissions_resource_action_key")
@@ -117,14 +117,14 @@ namespace public {
   }
 
   model RolePermission {
-    roleId       Uuid       @map("role_id")
-    permissionId Uuid       @map("permission_id")
-    createdBy    Uuid?      @map("created_by")
-    createdAt    DateTime   @default(now()) @map("created_at")
-    updatedAt    DateTime   @default(now()) @map("updated_at")
+    roleId       Uuid                 @map("role_id")
+    permissionId Uuid                 @map("permission_id")
+    createdBy    Uuid?                @map("created_by")
+    createdAt    TimestamptzString(3) @default(now()) @map("created_at")
+    updatedAt    TimestamptzString(3) @default(now()) @map("updated_at")
 
-    role         Role       @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade)
-    permission   Permission @relation(fields:[permissionId], references:[id], onDelete: Cascade, onUpdate: Cascade)
+    role         Role                 @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade)
+    permission   Permission           @relation(fields:[permissionId], references:[id], onDelete: Cascade, onUpdate: Cascade)
 
     @@id([roleId, permissionId], map: "role_permissions_pkey")
     @@index([permissionId], map: "role_permissions_permission_id_idx")
@@ -132,19 +132,19 @@ namespace public {
   }
 
   model AuditLog {
-    id          Uuid     @id @default(uuid())
-    userId      Uuid?    @map("user_id")
+    id          Uuid                 @id @default(uuid())
+    userId      Uuid?                @map("user_id")
     action      String
     resource    String
-    resourceId  Uuid?    @map("resource_id")
+    resourceId  Uuid?                @map("resource_id")
     description String?
-    ipAddress   String?  @map("ip_address")
-    userAgent   String?  @map("user_agent")
+    ipAddress   String?              @map("ip_address")
+    userAgent   String?              @map("user_agent")
     metadata    Json?
-    createdAt   DateTime @default(now()) @map("created_at")
-    updatedAt   DateTime @default(now()) @map("updated_at")
+    createdAt   TimestamptzString(3) @default(now()) @map("created_at")
+    updatedAt   TimestamptzString(3) @default(now()) @map("updated_at")
 
-    user        User?    @relation(fields:[userId], references:[id], onDelete: SetNull, onUpdate: Cascade)
+    user        User?                @relation(fields:[userId], references:[id], onDelete: SetNull, onUpdate: Cascade)
 
     @@index([action], map: "audit_logs_action_idx")
     @@index([createdAt], map: "audit_logs_created_at_idx")

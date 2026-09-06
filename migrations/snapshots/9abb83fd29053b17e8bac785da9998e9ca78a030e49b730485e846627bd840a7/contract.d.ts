@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'89912ae9722d4a91da22f8bec5783e89da946a76eb36a6227d8f9630e2d1384c'>;
+  StorageHashBase<'9abb83fd29053b17e8bac785da9998e9ca78a030e49b730485e846627bd840a7'>;
 export type ExecutionHash =
   ExecutionHashBase<'4b7d9f33bc2295e0cd02c1f6d2933a515115277872b74b67422d1561546ead71'>;
 export type ProfileHash =
@@ -251,30 +251,30 @@ export type FieldOutputTypes = {
       readonly ipAddress: CodecTypes['pg/text@1']['output'] | null;
       readonly userAgent: CodecTypes['pg/text@1']['output'] | null;
       readonly metadata: CodecTypes['pg/json@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly createdAt: TimestamptzString<3>;
+      readonly updatedAt: TimestamptzString<3>;
     };
     readonly AuthCredential: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly passwordHash: CodecTypes['pg/text@1']['output'];
-      readonly emailVerifiedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-      readonly lastLoginAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-      readonly passwordChangedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly emailVerifiedAt: TimestamptzString<3> | null;
+      readonly lastLoginAt: TimestamptzString<3> | null;
+      readonly passwordChangedAt: TimestamptzString<3> | null;
       readonly failedLoginAttempts: CodecTypes['pg/int4@1']['output'];
-      readonly lockedUntil: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly lockedUntil: TimestamptzString<3> | null;
+      readonly createdAt: TimestamptzString<3>;
+      readonly updatedAt: TimestamptzString<3>;
     };
     readonly AuthToken: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly _type: 'ACCESS' | 'REFRESH' | 'RESET_PASSWORD' | 'VERIFY_EMAIL';
       readonly token: CodecTypes['pg/text@1']['output'];
-      readonly expiresAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly usedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly expiresAt: TimestamptzString<3>;
+      readonly usedAt: TimestamptzString<3> | null;
+      readonly createdAt: TimestamptzString<3>;
+      readonly updatedAt: TimestamptzString<3>;
     };
     readonly Permission: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
@@ -282,22 +282,22 @@ export type FieldOutputTypes = {
       readonly resource: CodecTypes['pg/text@1']['output'];
       readonly action: CodecTypes['pg/text@1']['output'];
       readonly description: CodecTypes['pg/text@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly createdAt: TimestamptzString<3>;
+      readonly updatedAt: TimestamptzString<3>;
     };
     readonly Role: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly description: CodecTypes['pg/text@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly createdAt: TimestamptzString<3>;
+      readonly updatedAt: TimestamptzString<3>;
     };
     readonly RolePermission: {
       readonly roleId: CodecTypes['pg/uuid@1']['output'];
       readonly permissionId: CodecTypes['pg/uuid@1']['output'];
       readonly createdBy: CodecTypes['pg/uuid@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly createdAt: TimestamptzString<3>;
+      readonly updatedAt: TimestamptzString<3>;
     };
     readonly User: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
@@ -305,8 +305,8 @@ export type FieldOutputTypes = {
       readonly username: CodecTypes['pg/text@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly createdAt: TimestamptzString<3>;
+      readonly updatedAt: TimestamptzString<3>;
     };
     readonly UserProfile: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
@@ -315,10 +315,10 @@ export type FieldOutputTypes = {
       readonly middleName: CodecTypes['pg/text@1']['output'] | null;
       readonly lastName: CodecTypes['pg/text@1']['output'];
       readonly contactNumber: CodecTypes['pg/text@1']['output'] | null;
-      readonly dateOfBirth: CodecTypes['pg/date-temporal@1']['output'] | null;
+      readonly dateOfBirth: CodecTypes['pg/date-string@1']['output'] | null;
       readonly avatarUrl: CodecTypes['pg/text@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly createdAt: TimestamptzString<3>;
+      readonly updatedAt: TimestamptzString<3>;
     };
   };
 };
@@ -334,30 +334,30 @@ export type FieldInputTypes = {
       readonly ipAddress: CodecTypes['pg/text@1']['input'] | null;
       readonly userAgent: CodecTypes['pg/text@1']['input'] | null;
       readonly metadata: CodecTypes['pg/json@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly AuthCredential: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly passwordHash: CodecTypes['pg/text@1']['input'];
-      readonly emailVerifiedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
-      readonly lastLoginAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
-      readonly passwordChangedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly emailVerifiedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly lastLoginAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly passwordChangedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly failedLoginAttempts: CodecTypes['pg/int4@1']['input'];
-      readonly lockedUntil: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly lockedUntil: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly AuthToken: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly _type: 'ACCESS' | 'REFRESH' | 'RESET_PASSWORD' | 'VERIFY_EMAIL';
       readonly token: CodecTypes['pg/text@1']['input'];
-      readonly expiresAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly usedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly expiresAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly usedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly Permission: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
@@ -365,22 +365,22 @@ export type FieldInputTypes = {
       readonly resource: CodecTypes['pg/text@1']['input'];
       readonly action: CodecTypes['pg/text@1']['input'];
       readonly description: CodecTypes['pg/text@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly Role: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly description: CodecTypes['pg/text@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly RolePermission: {
       readonly roleId: CodecTypes['pg/uuid@1']['input'];
       readonly permissionId: CodecTypes['pg/uuid@1']['input'];
       readonly createdBy: CodecTypes['pg/uuid@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly User: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
@@ -388,8 +388,8 @@ export type FieldInputTypes = {
       readonly username: CodecTypes['pg/text@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly UserProfile: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
@@ -398,10 +398,10 @@ export type FieldInputTypes = {
       readonly middleName: CodecTypes['pg/text@1']['input'] | null;
       readonly lastName: CodecTypes['pg/text@1']['input'];
       readonly contactNumber: CodecTypes['pg/text@1']['input'] | null;
-      readonly dateOfBirth: CodecTypes['pg/date-temporal@1']['input'] | null;
+      readonly dateOfBirth: CodecTypes['pg/date-string@1']['input'] | null;
       readonly avatarUrl: CodecTypes['pg/text@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
   };
 };
@@ -409,81 +409,81 @@ export type StorageColumnTypes = {
   readonly public: {
     readonly audit_logs: {
       readonly action: CodecTypes['pg/text@1']['output'];
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly created_at: TimestamptzString<3>;
       readonly description: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly ip_address: CodecTypes['pg/text@1']['output'] | null;
       readonly metadata: CodecTypes['pg/json@1']['output'] | null;
       readonly resource: CodecTypes['pg/text@1']['output'];
       readonly resource_id: CodecTypes['pg/uuid@1']['output'] | null;
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updated_at: TimestamptzString<3>;
       readonly user_agent: CodecTypes['pg/text@1']['output'] | null;
       readonly user_id: CodecTypes['pg/uuid@1']['output'] | null;
     };
     readonly auth_credentials: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly email_verified_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly created_at: TimestamptzString<3>;
+      readonly email_verified_at: TimestamptzString<3> | null;
       readonly failed_login_attempts: CodecTypes['pg/int4@1']['output'];
       readonly id: CodecTypes['pg/uuid@1']['output'];
-      readonly last_login_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-      readonly locked_until: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-      readonly password_changed_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly last_login_at: TimestamptzString<3> | null;
+      readonly locked_until: TimestamptzString<3> | null;
+      readonly password_changed_at: TimestamptzString<3> | null;
       readonly password_hash: CodecTypes['pg/text@1']['output'];
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updated_at: TimestamptzString<3>;
       readonly user_id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly auth_tokens: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly expires_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly created_at: TimestamptzString<3>;
+      readonly expires_at: TimestamptzString<3>;
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly token: CodecTypes['pg/text@1']['output'];
       readonly type: 'ACCESS' | 'REFRESH' | 'RESET_PASSWORD' | 'VERIFY_EMAIL';
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly used_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly updated_at: TimestamptzString<3>;
+      readonly used_at: TimestamptzString<3> | null;
       readonly user_id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly permissions: {
       readonly action: CodecTypes['pg/text@1']['output'];
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly created_at: TimestamptzString<3>;
       readonly description: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly resource: CodecTypes['pg/text@1']['output'];
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updated_at: TimestamptzString<3>;
     };
     readonly role_permissions: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly created_at: TimestamptzString<3>;
       readonly created_by: CodecTypes['pg/uuid@1']['output'] | null;
       readonly permission_id: CodecTypes['pg/uuid@1']['output'];
       readonly role_id: CodecTypes['pg/uuid@1']['output'];
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updated_at: TimestamptzString<3>;
     };
     readonly roles: {
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly createdAt: TimestamptzString<3>;
       readonly description: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updatedAt: TimestamptzString<3>;
     };
     readonly user_profiles: {
       readonly avatar_url: CodecTypes['pg/text@1']['output'] | null;
       readonly contact_number: CodecTypes['pg/text@1']['output'] | null;
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly date_of_birth: CodecTypes['pg/date-temporal@1']['output'] | null;
+      readonly created_at: TimestamptzString<3>;
+      readonly date_of_birth: CodecTypes['pg/date-string@1']['output'] | null;
       readonly first_name: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly last_name: CodecTypes['pg/text@1']['output'];
       readonly middle_name: CodecTypes['pg/text@1']['output'] | null;
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updated_at: TimestamptzString<3>;
       readonly user_id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly users: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly created_at: TimestamptzString<3>;
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly role_id: CodecTypes['pg/uuid@1']['output'];
       readonly status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updated_at: TimestamptzString<3>;
       readonly username: CodecTypes['pg/text@1']['output'];
     };
   };
@@ -492,81 +492,81 @@ export type StorageColumnInputTypes = {
   readonly public: {
     readonly audit_logs: {
       readonly action: CodecTypes['pg/text@1']['input'];
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly description: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly ip_address: CodecTypes['pg/text@1']['input'] | null;
       readonly metadata: CodecTypes['pg/json@1']['input'] | null;
       readonly resource: CodecTypes['pg/text@1']['input'];
       readonly resource_id: CodecTypes['pg/uuid@1']['input'] | null;
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly user_agent: CodecTypes['pg/text@1']['input'] | null;
       readonly user_id: CodecTypes['pg/uuid@1']['input'] | null;
     };
     readonly auth_credentials: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly email_verified_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly email_verified_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly failed_login_attempts: CodecTypes['pg/int4@1']['input'];
       readonly id: CodecTypes['pg/uuid@1']['input'];
-      readonly last_login_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
-      readonly locked_until: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
-      readonly password_changed_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly last_login_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly locked_until: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly password_changed_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly password_hash: CodecTypes['pg/text@1']['input'];
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly user_id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly auth_tokens: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly expires_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly expires_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly token: CodecTypes['pg/text@1']['input'];
       readonly type: 'ACCESS' | 'REFRESH' | 'RESET_PASSWORD' | 'VERIFY_EMAIL';
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly used_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly used_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly user_id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly permissions: {
       readonly action: CodecTypes['pg/text@1']['input'];
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly description: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly resource: CodecTypes['pg/text@1']['input'];
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly role_permissions: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly created_by: CodecTypes['pg/uuid@1']['input'] | null;
       readonly permission_id: CodecTypes['pg/uuid@1']['input'];
       readonly role_id: CodecTypes['pg/uuid@1']['input'];
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly roles: {
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly description: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly user_profiles: {
       readonly avatar_url: CodecTypes['pg/text@1']['input'] | null;
       readonly contact_number: CodecTypes['pg/text@1']['input'] | null;
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly date_of_birth: CodecTypes['pg/date-temporal@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly date_of_birth: CodecTypes['pg/date-string@1']['input'] | null;
       readonly first_name: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly last_name: CodecTypes['pg/text@1']['input'];
       readonly middle_name: CodecTypes['pg/text@1']['input'] | null;
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly user_id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly users: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly created_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly role_id: CodecTypes['pg/uuid@1']['input'];
       readonly status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
-      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly username: CodecTypes['pg/text@1']['input'];
     };
   };
@@ -638,15 +638,17 @@ type ContractBase = Omit<
                 };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly updated_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -707,18 +709,21 @@ type ContractBase = Omit<
                 };
                 readonly email_verified_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly last_login_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly password_changed_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly failed_login_attempts: {
                   readonly nativeType: 'int4';
@@ -731,20 +736,23 @@ type ContractBase = Omit<
                 };
                 readonly locked_until: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly updated_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -789,25 +797,29 @@ type ContractBase = Omit<
                 };
                 readonly expires_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly used_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: true;
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly updated_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -873,15 +885,17 @@ type ContractBase = Omit<
                 };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly updated_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -914,15 +928,17 @@ type ContractBase = Omit<
                 };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly updated_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               primaryKey: {
@@ -989,15 +1005,17 @@ type ContractBase = Omit<
                 };
                 readonly createdAt: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly updatedAt: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -1039,7 +1057,7 @@ type ContractBase = Omit<
                 };
                 readonly date_of_birth: {
                   readonly nativeType: 'date';
-                  readonly codecId: 'pg/date-temporal@1';
+                  readonly codecId: 'pg/date-string@1';
                   readonly nullable: true;
                 };
                 readonly avatar_url: {
@@ -1049,15 +1067,17 @@ type ContractBase = Omit<
                 };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly updated_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -1111,15 +1131,17 @@ type ContractBase = Omit<
                 };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
                 readonly updated_at: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -1251,14 +1273,16 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
             };
@@ -1308,21 +1332,24 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly lastLoginAt: {
                 readonly nullable: true;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly passwordChangedAt: {
                 readonly nullable: true;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly failedLoginAttempts: {
@@ -1333,21 +1360,24 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly createdAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
             };
@@ -1400,28 +1430,32 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly usedAt: {
                 readonly nullable: true;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly createdAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
             };
@@ -1476,14 +1510,16 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
             };
@@ -1532,14 +1568,16 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
             };
@@ -1586,14 +1624,16 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
             };
@@ -1656,14 +1696,16 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
             };
@@ -1763,7 +1805,7 @@ type ContractBase = Omit<
               };
               readonly dateOfBirth: {
                 readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-temporal@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
               };
               readonly avatarUrl: {
                 readonly nullable: true;
@@ -1773,14 +1815,16 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly typeParams: { readonly precision: 3 };
                 };
               };
             };
