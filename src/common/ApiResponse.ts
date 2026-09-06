@@ -1,12 +1,12 @@
-import { TResponseCode, ResponseCode } from './constants/response-code';
+import { TResponseCode, ResponseCode } from './constants/response-code.js';
 
 export class ApiResponse<T> {
-  private readonly responseCode!: TResponseCode;
+  private readonly code!: number;
   private readonly message?: string;
   private readonly data?: T;
 
   constructor(responseCode: TResponseCode, message?: string, data?: T) {
-    this.responseCode = responseCode;
+    this.code = responseCode.code;
     this.message = message ?? responseCode.message;
     this.data = data;
   }

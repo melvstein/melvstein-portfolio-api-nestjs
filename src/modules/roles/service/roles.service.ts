@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRoleRequestDto } from '../dto/create-role.request.dto.js';
 import { UpdateRoleRequestDto } from '../dto/update-role.request.dto.js';
-import { ApiResponse } from 'src/common/ApiResponse.js';
+import { ApiResponse } from '../../../common/ApiResponse.js';
 import { db } from '../../../database/prisma/db.js';
 import { Role } from '../interfaces/role.interface.js';
 
@@ -11,11 +11,12 @@ export class RolesService {
     return db.orm.public.Role.create({
       name: request.name,
       description: request.description,
-    }) as Promise<Role>;
+    });
   }
 
-  findAll() {
-    return null;
+  async findAll(): Promise<ApiResponse<Role[]>> {
+    const roles = await db.orm.public.Role.all();
+    return ApiResponse.success(roles);
   }
 
   findOne(id: number) {
