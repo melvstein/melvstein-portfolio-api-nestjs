@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateRoleRequestDto } from './dto/create-role.request.dto.js';
 import { UpdateRoleRequestDto } from './dto/update-role.request.dto.js';
 import { ApiResponse } from '../../common/responses/ApiResponse.js';
@@ -7,10 +7,14 @@ import { Role } from './types/role.type.js';
 import { ApiException } from '../../common/exceptions/ApiException.js';
 import { ResponseCode } from '../../common/constants/response-code.js';
 import { isUniqueViolation } from '../../shared/utils/error.util.js';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @Injectable()
 export class RoleService {
-  private readonly logger = new Logger(RoleService.name);
+  constructor(
+    @InjectPinoLogger(RoleService.name)
+    private readonly logger: PinoLogger,
+  ) {}
 
   async create(request: CreateRoleRequestDto): Promise<ApiResponse<Role>> {
     const methodName = this.create.name;
@@ -23,7 +27,7 @@ export class RoleService {
 
       const response = ApiResponse.success(role, 'Role created successfully');
 
-      this.logger.log({
+      this.logger.info({
         methodName,
         request,
         response,
@@ -39,7 +43,10 @@ export class RoleService {
           error,
         });
 
-        throw new ApiException(ResponseCode.DUPLICATE_ENTRY);
+        throw new ApiException(
+          ResponseCode.DUPLICATE_ENTRY,
+          'Role name already exists',
+        );
       }
 
       this.logger.error({
@@ -49,30 +56,30 @@ export class RoleService {
         error: error,
       });
 
-      throw new ApiException(ResponseCode.INTERNAL_SERVER_ERROR);
+      throw new ApiException(
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        'An unexpected error occurred',
+      );
     }
   }
 
   async findAll(): Promise<ApiResponse<Role[]>> {
+    const methodName = this.findAll.name;
+
     try {
       const roles = await db.orm.public.Role.all();
-
-      const methodName = this.findAll.name;
-
       const response = ApiResponse.success(
         roles,
         'Roles retrieved successfully',
       );
 
-      this.logger.log({
+      this.logger.info({
         methodName,
         response,
       });
 
       return response;
     } catch (error: unknown) {
-      const methodName = this.findAll.name;
-
       this.logger.error({
         methodName,
         message: 'Unexpected error',
@@ -83,15 +90,15 @@ export class RoleService {
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} role`;
   }
 
-  update(id: number, request: UpdateRoleRequestDto) {
+  update(id: string, request: UpdateRoleRequestDto) {
     return `This action updates a #${id} role with name ${request.name}`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} role`;
   }
 }

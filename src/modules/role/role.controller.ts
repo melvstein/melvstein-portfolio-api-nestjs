@@ -6,17 +6,27 @@ import {
   Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { RoleService } from './role.service.js';
 import { CreateRoleRequestDto } from './dto/create-role.request.dto.js';
 import { UpdateRoleRequestDto } from './dto/update-role.request.dto.js';
 
 @Controller('roles')
 export class RoleController {
-  constructor(private readonly roleService: RoleService) {}
+  constructor(
+    @InjectPinoLogger(RoleController.name)
+    private readonly logger: PinoLogger,
+    private readonly roleService: RoleService,
+  ) {}
 
   @Post()
   create(@Body() request: CreateRoleRequestDto) {
+    this.logger.info({
+      message: 'melvstein24',
+      request,
+    });
     return this.roleService.create(request);
   }
 
@@ -26,17 +36,20 @@ export class RoleController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.roleService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.roleService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() request: UpdateRoleRequestDto) {
-    return this.roleService.update(+id, request);
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() request: UpdateRoleRequestDto,
+  ) {
+    return this.roleService.update(id, request);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.roleService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.roleService.remove(id);
   }
 }

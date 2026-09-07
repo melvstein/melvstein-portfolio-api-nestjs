@@ -16,6 +16,11 @@ export const ResponseCode = {
     message: 'Duplicate Entry',
     httpStatus: HttpStatus.CONFLICT,
   },
+  BAD_REQUEST: {
+    code: 'BAD_REQUEST',
+    message: 'Bad Request',
+    httpStatus: HttpStatus.BAD_REQUEST,
+  },
 } as const;
 
 export type TResponseCode = (typeof ResponseCode)[keyof typeof ResponseCode];
