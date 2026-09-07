@@ -90,8 +90,35 @@ export class RoleService {
     }
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} role`;
+  async findOne(id: string): Promise<ApiResponse<Role | null>> {
+    const methodName = this.findOne.name;
+
+    try {
+      const role = await db.orm.public.Role.where({ id }).first();
+
+      const response = ApiResponse.success(
+        role,
+        role ? 'Role retrieved successfully' : 'Role not found',
+      );
+
+      this.logger.info({
+        methodName,
+        response,
+      });
+
+      return response;
+    } catch (error: unknown) {
+      this.logger.error({
+        methodName,
+        message: 'Unexpected error',
+        error,
+      });
+
+      throw new ApiException(
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        'An unexpected error occurred',
+      );
+    }
   }
 
   update(id: string, request: UpdateRoleRequestDto) {
