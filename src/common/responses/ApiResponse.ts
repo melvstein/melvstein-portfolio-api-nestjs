@@ -13,12 +13,23 @@ export class ApiResponse<T> {
 
   static success<T>(): ApiResponse<T>;
   static success<T>(data: T): ApiResponse<T>;
+  static success<T>(data: T, message: string): ApiResponse<T>;
 
-  static success<T>(data?: T): ApiResponse<T> {
-    return new ApiResponse<T>(ResponseCode.SUCCESS, undefined, data);
+  static success<T>(data?: T, message?: string): ApiResponse<T> {
+    return new ApiResponse<T>(
+      ResponseCode.SUCCESS,
+      message ?? ResponseCode.SUCCESS.message,
+      data,
+    );
   }
 
-  static internalServerError<T>(): ApiResponse<T> {
-    return new ApiResponse<T>(ResponseCode.INTERNAL_SERVER_ERROR);
+  static internalServerError<T>(): ApiResponse<T>;
+  static internalServerError<T>(message: string): ApiResponse<T>;
+
+  static internalServerError<T>(message?: string): ApiResponse<T> {
+    return new ApiResponse<T>(
+      ResponseCode.INTERNAL_SERVER_ERROR,
+      message ?? ResponseCode.INTERNAL_SERVER_ERROR.message,
+    );
   }
 }
