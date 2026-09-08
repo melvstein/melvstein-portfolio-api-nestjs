@@ -5,7 +5,7 @@ import { VersioningType, ValidationPipe } from '@nestjs/common';
 import { loggerConfig } from './config/logger.config.js';
 import { NativeLogger } from 'nestjs-pino';
 import { ResponseCode } from './common/constants/response-code.js';
-import { ApiException } from './common/exceptions/ApiException.js';
+import { ApiException } from './common/exceptions/api.exception.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

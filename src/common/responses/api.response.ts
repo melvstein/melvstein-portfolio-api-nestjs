@@ -1,14 +1,26 @@
-import { TResponseCode, ResponseCode } from '../constants/response-code.js';
+import { ResponseCode } from '../constants/response-code.js';
 
 export class ApiResponse<T> {
   private readonly code!: string;
   private readonly message?: string;
   private readonly data?: T;
 
-  constructor(responseCode: TResponseCode, message?: string, data?: T) {
-    this.code = responseCode.code;
-    this.message = message ?? responseCode.message;
+  constructor(responseCode: ResponseCode, message?: string, data?: T) {
+    this.code = responseCode.getCode();
+    this.message = message ?? responseCode.getMessage();
     this.data = data;
+  }
+
+  getCode(): string {
+    return this.code;
+  }
+
+  getMessage(): string | undefined {
+    return this.message;
+  }
+
+  getData(): T | undefined {
+    return this.data;
   }
 
   static success<T>(): ApiResponse<T>;
@@ -18,7 +30,7 @@ export class ApiResponse<T> {
   static success<T>(data?: T, message?: string): ApiResponse<T> {
     return new ApiResponse<T>(
       ResponseCode.SUCCESS,
-      message ?? ResponseCode.SUCCESS.message,
+      message ?? ResponseCode.SUCCESS.getMessage(),
       data,
     );
   }
@@ -29,7 +41,7 @@ export class ApiResponse<T> {
   static internalServerError<T>(message?: string): ApiResponse<T> {
     return new ApiResponse<T>(
       ResponseCode.INTERNAL_SERVER_ERROR,
-      message ?? ResponseCode.INTERNAL_SERVER_ERROR.message,
+      message ?? ResponseCode.INTERNAL_SERVER_ERROR.getMessage(),
     );
   }
 }

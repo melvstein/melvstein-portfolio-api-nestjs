@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Response,
 } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { RoleService } from './role.service.js';
 import { CreateRoleRequestDto } from './dto/create-role.request.dto.js';
 import { UpdateRoleRequestDto } from './dto/update-role.request.dto.js';
 import { AppParseUUIDPipe } from '../../common/pipes/app-parse-uuid.pipe.js';
+import { ResponseCode } from '../../common/constants/response-code.js';
 
 @Controller('roles')
 export class RoleController {
@@ -49,7 +51,15 @@ export class RoleController {
   }
 
   @Delete(':id')
-  remove(@Param('id', AppParseUUIDPipe) id: string) {
-    return this.roleService.remove(id);
+  async remove(
+    @Param('id', AppParseUUIDPipe) id: string,
+    @Response() response,
+  ): Promise<Response> {
+    const result = await this.roleService.remove(id);
+
+    const responseCode =
+      ResponseCode.find(result.getCode()) ?? ResponseCode.INTERNAL_SERVER_ERROR;
+
+    return response.status(responseCode.getHttpStatus()).json(result);
   }
 }

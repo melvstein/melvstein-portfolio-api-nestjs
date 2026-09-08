@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRoleRequestDto } from './dto/create-role.request.dto.js';
 import { UpdateRoleRequestDto } from './dto/update-role.request.dto.js';
-import { ApiResponse } from '../../common/responses/ApiResponse.js';
+import { ApiResponse } from '../../common/responses/api.response.js';
 import { db } from '../../database/prisma/db.js';
 import { Role } from './types/role.type.js';
-import { ApiException } from '../../common/exceptions/ApiException.js';
+import { ApiException } from '../../common/exceptions/api.exception.js';
 import { ResponseCode } from '../../common/constants/response-code.js';
 import { isUniqueViolation } from '../../shared/utils/error.util.js';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
@@ -96,10 +96,11 @@ export class RoleService {
     try {
       const role = await db.orm.public.Role.where({ id }).first();
 
-      const response = ApiResponse.success(
-        role,
-        role ? 'Role retrieved successfully' : 'Role not found',
-      );
+      if (!role) {
+        return new ApiResponse(ResponseCode.NOT_FOUND, 'Role not found');
+      }
+
+      const response = ApiResponse.success(role, 'Role retrieved successfully');
 
       this.logger.info({
         methodName,
@@ -125,7 +126,38 @@ export class RoleService {
     return `This action updates a #${id} role with name ${request.name}`;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} role`;
+  async remove(id: string): Promise<ApiResponse<Role>> {
+    const methodName = this.remove.name;
+
+    try {
+      const deletedRole = await db.orm.public.Role.where({ id }).delete();
+
+      if (!deletedRole) {
+        return new ApiResponse(ResponseCode.NOT_FOUND, 'Role not found');
+      }
+
+      const response = ApiResponse.success(
+        deletedRole,
+        'Role removed successfully',
+      );
+
+      this.logger.info({
+        methodName,
+        response,
+      });
+
+      return response;
+    } catch (error: unknown) {
+      this.logger.error({
+        methodName,
+        message: 'Unexpected error',
+        error,
+      });
+
+      throw new ApiException(
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        'An unexpected error occurred',
+      );
+    }
   }
 }
