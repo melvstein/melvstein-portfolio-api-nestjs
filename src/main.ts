@@ -6,6 +6,7 @@ import { loggerConfig } from './config/logger.config.js';
 import { NativeLogger } from 'nestjs-pino';
 import { ResponseCode } from './common/constants/response-code.js';
 import { ApiException } from './common/exceptions/api.exception.js';
+import { AuthGuard } from './common/guards/auth.guard.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -26,6 +27,8 @@ async function bootstrap() {
 
   const logger = app.get(NativeLogger);
   app.useLogger(logger);
+
+  app.useGlobalGuards(new AuthGuard());
 
   app.useGlobalPipes(
     new ValidationPipe({

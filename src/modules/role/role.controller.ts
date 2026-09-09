@@ -59,7 +59,7 @@ export class RoleController {
     const result = await this.roleService.remove(id);
 
     const responseCode =
-      ResponseCode.find(result.getCode()) ?? ResponseCode.INTERNAL_SERVER_ERROR;
+      ResponseCode.get(result.getCode()) ?? ResponseCode.INTERNAL_SERVER_ERROR;
 
     return response.status(responseCode.getHttpStatus()).json(result);
   }

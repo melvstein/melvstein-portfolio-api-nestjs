@@ -1,4 +1,9 @@
-import { Module, DynamicModule } from '@nestjs/common';
+import {
+  Module,
+  DynamicModule,
+  NestModule,
+  MiddlewareConsumer,
+} from '@nestjs/common';
 import { z } from 'zod';
 import { Environment } from './common/enums/environment.enum.js';
 import { AppController } from './app.controller.js';
@@ -12,6 +17,8 @@ import { UserModule } from './modules/user/user.module.js';
 import { AppLoggerModule } from './core/app-logger/app-logger.module.js';
 import { createObserveModule } from '@nestjs/observe';
 import { LoggerModule } from 'nestjs-pino';
+import { LoggerMiddleware } from './common/middlewares/logger.middleware.js';
+import { RoleController } from './modules/role/role.controller.js';
 
 const validationSchema = z.object({
   APP_NAME: z.string().trim().min(1, 'APP_NAME is required'),
@@ -119,4 +126,8 @@ if (process.env.OBSERVE_ENABLED === 'true') {
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes(RoleController);
+  }
+}

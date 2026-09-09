@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ResponseCode } from '../constants/response-code.js';
-import { get } from 'http';
 
 @Catch(BadRequestException)
 export class BadRequestExceptionFilter implements ExceptionFilter {

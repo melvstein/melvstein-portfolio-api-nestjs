@@ -49,9 +49,10 @@ export class ResponseCode {
     HttpStatus.NOT_FOUND,
   );
 
-  static find(code: string): ResponseCode | undefined {
+  static get(code: string): ResponseCode | undefined {
     return Object.values(ResponseCode).find(
-      (responseCode) => responseCode instanceof ResponseCode && responseCode.getCode() === code,
+      (responseCode) =>
+        responseCode instanceof ResponseCode && responseCode.getCode() === code,
     ) as ResponseCode | undefined;
   }
 }
