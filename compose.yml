@@ -1,7 +1,8 @@
+name: melvstein-portfolio-api-nestjs
+
 services:
   postgres:
     image: postgres:17
-    container_name: melvstein-portfolio-api-nestjs-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
