@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { ResponseCode } from '../constants/response-code';
+import { ResponseCode } from '../constant/response-code.js';
 
 export class ApiException extends HttpException {
   constructor(
-    responseCode: ResponseCode,
+    private readonly responseCode: ResponseCode,
     message?: string,
     httpStatus?: HttpStatus,
   ) {
@@ -14,5 +14,9 @@ export class ApiException extends HttpException {
       },
       httpStatus ?? responseCode.getHttpStatus(),
     );
+  }
+
+  public getResponseCode(): ResponseCode {
+    return this.responseCode;
   }
 }

@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRoleRequestDto } from './dto/create-role.request.dto.js';
 import { UpdateRoleRequestDto } from './dto/update-role.request.dto.js';
-import { ApiResponse } from '../../common/responses/api.response.js';
+import { ApiResponse } from '../../common/response/api.response.js';
 import { db } from '../../database/prisma/db.js';
-import { Role } from './types/role.type.js';
-import { ApiException } from '../../common/exceptions/api.exception.js';
-import { ResponseCode } from '../../common/constants/response-code.js';
+import { Role } from './type/role.type.js';
+import { ApiException } from '../../common/exception/api.exception.js';
+import { ResponseCode } from '../../common/constant/response-code.js';
 import { isUniqueViolation } from '../../shared/utils/error.util.js';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
@@ -25,15 +25,7 @@ export class RoleService {
         description: request.description,
       });
 
-      const response = ApiResponse.success(role, 'Role created successfully');
-
-      this.logger.info({
-        methodName,
-        request,
-        response,
-      });
-
-      return response;
+      return ApiResponse.success(role, 'Role created successfully');
     } catch (error: unknown) {
       if (isUniqueViolation(error)) {
         this.logger.error({
@@ -49,77 +41,30 @@ export class RoleService {
         );
       }
 
-      this.logger.error({
-        methodName,
-        message: 'Unexpected error',
-        request,
-        error: error,
-      });
-
-      throw new ApiException(
-        ResponseCode.INTERNAL_SERVER_ERROR,
-        'An unexpected error occurred',
-      );
+      throw error;
     }
   }
 
   async findAll(): Promise<ApiResponse<Role[]>> {
-    const methodName = this.findAll.name;
-
-    try {
-      const roles = await db.orm.public.Role.all();
-      const response = ApiResponse.success(
-        roles,
-        'Roles retrieved successfully',
-      );
-
-      this.logger.info({
-        methodName,
-        response,
-      });
-
-      return response;
-    } catch (error: unknown) {
-      this.logger.error({
-        methodName,
-        message: 'Unexpected error',
-        error,
-      });
-
-      throw new ApiException(ResponseCode.INTERNAL_SERVER_ERROR);
-    }
+    const roles = await db.orm.public.Role.all();
+    return ApiResponse.success(roles, 'Roles retrieved successfully');
   }
 
   async findOne(id: string): Promise<ApiResponse<Role | null>> {
     const methodName = this.findOne.name;
+    const role = await db.orm.public.Role.where({ id }).first();
 
-    try {
-      const role = await db.orm.public.Role.where({ id }).first();
-
-      if (!role) {
-        return new ApiResponse(ResponseCode.NOT_FOUND, 'Role not found');
-      }
-
-      const response = ApiResponse.success(role, 'Role retrieved successfully');
-
-      this.logger.info({
-        methodName,
-        response,
-      });
-
-      return response;
-    } catch (error: unknown) {
+    if (!role) {
       this.logger.error({
         methodName,
-        message: 'Unexpected error',
-        error,
+        message: 'Role not found',
+        request: { id },
       });
 
-      throw new ApiException(
-        ResponseCode.INTERNAL_SERVER_ERROR,
-        'An unexpected error occurred',
-      );
+      throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
     }
+
+    return ApiResponse.success(role, 'Role retrieved successfully');
   }
 
   update(id: string, request: UpdateRoleRequestDto) {
@@ -128,36 +73,18 @@ export class RoleService {
 
   async remove(id: string): Promise<ApiResponse<Role>> {
     const methodName = this.remove.name;
+    const deletedRole = await db.orm.public.Role.where({ id }).delete();
 
-    try {
-      const deletedRole = await db.orm.public.Role.where({ id }).delete();
-
-      if (!deletedRole) {
-        return new ApiResponse(ResponseCode.NOT_FOUND, 'Role not found');
-      }
-
-      const response = ApiResponse.success(
-        deletedRole,
-        'Role removed successfully',
-      );
-
-      this.logger.info({
-        methodName,
-        response,
-      });
-
-      return response;
-    } catch (error: unknown) {
+    if (!deletedRole) {
       this.logger.error({
         methodName,
-        message: 'Unexpected error',
-        error,
+        message: 'Role not found',
+        request: { id },
       });
 
-      throw new ApiException(
-        ResponseCode.INTERNAL_SERVER_ERROR,
-        'An unexpected error occurred',
-      );
+      throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
     }
+
+    return ApiResponse.success(deletedRole, 'Role removed successfully');
   }
 }

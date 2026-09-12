@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { Environment } from '../common/enums/environment.enum.js';
+import { Environment } from '../common/enum/environment.enum.js';
 
 export interface ApplicationConfig {
   environment: string;

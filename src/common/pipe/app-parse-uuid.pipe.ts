@@ -1,7 +1,7 @@
 import { ParseUUIDPipe } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { ApiException } from '../exceptions/api.exception.js';
-import { ResponseCode } from '../constants/response-code.js';
+import { ApiException } from '../exception/api.exception.js';
+import { ResponseCode } from '../constant/response-code.js';
 
 export class AppParseUUIDPipe extends ParseUUIDPipe {
   constructor(

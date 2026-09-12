@@ -6,15 +6,12 @@ import {
   Patch,
   Param,
   Delete,
-  Res,
 } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { RoleService } from './role.service.js';
 import { CreateRoleRequestDto } from './dto/create-role.request.dto.js';
 import { UpdateRoleRequestDto } from './dto/update-role.request.dto.js';
-import { AppParseUUIDPipe } from '../../common/pipes/app-parse-uuid.pipe.js';
-import { ResponseCode } from '../../common/constants/response-code.js';
-import type { Response } from 'express';
+import { AppParseUUIDPipe } from '../../common/pipe/app-parse-uuid.pipe.js';
 
 @Controller('roles')
 export class RoleController {
@@ -26,10 +23,6 @@ export class RoleController {
 
   @Post()
   create(@Body() request: CreateRoleRequestDto) {
-    this.logger.info({
-      message: 'melvstein24',
-      request,
-    });
     return this.roleService.create(request);
   }
 
@@ -52,15 +45,7 @@ export class RoleController {
   }
 
   @Delete(':id')
-  async remove(
-    @Param('id', AppParseUUIDPipe) id: string,
-    @Res() response: Response,
-  ): Promise<Response> {
-    const result = await this.roleService.remove(id);
-
-    const responseCode =
-      ResponseCode.get(result.getCode()) ?? ResponseCode.INTERNAL_SERVER_ERROR;
-
-    return response.status(responseCode.getHttpStatus()).json(result);
+  remove(@Param('id', AppParseUUIDPipe) id: string) {
+    return this.roleService.remove(id);
   }
 }

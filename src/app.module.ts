@@ -5,7 +5,7 @@ import {
   MiddlewareConsumer,
 } from '@nestjs/common';
 import { z } from 'zod';
-import { Environment } from './common/enums/environment.enum.js';
+import { Environment } from './common/enum/environment.enum.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -17,7 +17,7 @@ import { UserModule } from './modules/user/user.module.js';
 import { AppLoggerModule } from './core/app-logger/app-logger.module.js';
 import { createObserveModule } from '@nestjs/observe';
 import { LoggerModule } from 'nestjs-pino';
-import { LoggerMiddleware } from './common/middlewares/logger.middleware.js';
+import { LoggerMiddleware } from './common/middleware/logger.middleware.js';
 import { RoleController } from './modules/role/role.controller.js';
 
 const validationSchema = z.object({

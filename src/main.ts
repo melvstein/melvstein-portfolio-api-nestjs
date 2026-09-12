@@ -4,9 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { VersioningType, ValidationPipe } from '@nestjs/common';
 import { loggerConfig } from './config/logger.config.js';
 import { NativeLogger } from 'nestjs-pino';
-import { ResponseCode } from './common/constants/response-code.js';
-import { ApiException } from './common/exceptions/api.exception.js';
-import { AuthGuard } from './common/guards/auth.guard.js';
+import { ResponseCode } from './common/constant/response-code.js';
+import { ApiException } from './common/exception/api.exception.js';
+import { AuthGuard } from './common/guard/auth.guard.js';
+import { GlobalExceptionFilter } from './common/filter/global-exception.filter.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -28,6 +29,7 @@ async function bootstrap() {
   const logger = app.get(NativeLogger);
   app.useLogger(logger);
 
+  app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalGuards(new AuthGuard());
 
   app.useGlobalPipes(
