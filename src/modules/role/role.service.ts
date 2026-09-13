@@ -67,8 +67,49 @@ export class RoleService {
     return ApiResponse.success(role, 'Role retrieved successfully');
   }
 
-  update(id: string, request: UpdateRoleRequestDto) {
-    return `This action updates a #${id} role with name ${request.name}`;
+  async update(
+    id: string,
+    request: UpdateRoleRequestDto,
+  ): Promise<ApiResponse<Role | null>> {
+    const methodName = this.update.name;
+
+    try {
+      const role = await db.orm.public.Role.where({ id }).first();
+
+      if (!role) {
+        this.logger.error({
+          methodName,
+          message: 'Role not found',
+          paramId: id,
+          request,
+        });
+
+        throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
+      }
+
+      const updatedRole = await db.orm.public.Role.where({ id }).update({
+        name: request.name,
+        description: request.description,
+      });
+
+      return ApiResponse.success(updatedRole, 'Role updated successfully');
+    } catch (error: unknown) {
+      if (isUniqueViolation(error)) {
+        this.logger.error({
+          methodName,
+          message: 'Duplicate entry error',
+          request,
+          error,
+        });
+
+        throw new ApiException(
+          ResponseCode.DUPLICATE_ENTRY,
+          'Role name already exists',
+        );
+      }
+
+      throw error;
+    }
   }
 
   async remove(id: string): Promise<ApiResponse<Role>> {
