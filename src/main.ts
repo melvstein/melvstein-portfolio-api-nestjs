@@ -8,6 +8,7 @@ import { ResponseCode } from './common/constant/response-code.js';
 import { ApiException } from './common/exception/api.exception.js';
 import { AuthGuard } from './common/guard/auth.guard.js';
 import { GlobalExceptionFilter } from './common/filter/global-exception.filter.js';
+import { LoggingInterceptor } from './common/interceptor/logging.interceptor.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -31,6 +32,7 @@ async function bootstrap() {
 
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalGuards(new AuthGuard());
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.useGlobalPipes(
     new ValidationPipe({

@@ -1,9 +1,9 @@
 import {
   ExceptionFilter,
   Catch,
-  ArgumentsHost,
   Logger,
   NotFoundException,
+  ExecutionContext,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { ApiException } from '../exception/api.exception.js';
@@ -14,10 +14,10 @@ import { ResponseCode } from '../constant/response-code.js';
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger: Logger = new Logger(GlobalExceptionFilter.name);
 
-  catch(exception: unknown, host: ArgumentsHost): Response {
+  catch(exception: unknown, host: ExecutionContext): Response {
     const methodName = this.catch.name;
-    const ctx = host.switchToHttp();
-    const response: Response = ctx.getResponse();
+    const context = host.switchToHttp();
+    const response: Response = context.getResponse();
 
     if (exception instanceof ApiException) {
       return response
