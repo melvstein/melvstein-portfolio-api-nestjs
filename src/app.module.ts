@@ -11,14 +11,14 @@ import { AppService } from './app.service.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config.js';
 import applicationConfig from './config/application.config.js';
-import { AuthModule } from './core/auth/auth.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
 import { RoleModule } from './modules/role/role.module.js';
 import { UserModule } from './modules/user/user.module.js';
 import { AppLoggerModule } from './core/app-logger/app-logger.module.js';
 import { createObserveModule } from '@nestjs/observe';
 import { LoggerModule } from 'nestjs-pino';
 import { LoggerMiddleware } from './common/middleware/logger.middleware.js';
-import { RoleController } from './modules/role/role.controller.js';
+import { RoleController } from './modules/role/controller/role.controller.js';
 
 const validationSchema = z.object({
   APP_NAME: z.string().trim().min(1, 'APP_NAME is required'),

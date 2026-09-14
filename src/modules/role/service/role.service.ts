@@ -1,29 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRoleRequestDto } from './dto/create-role.request.dto.js';
-import { UpdateRoleRequestDto } from './dto/update-role.request.dto.js';
-import { ApiResponse } from '../../common/response/api.response.js';
-import { db } from '../../database/prisma/db.js';
-import { Role } from './type/role.type.js';
-import { ApiException } from '../../common/exception/api.exception.js';
-import { ResponseCode } from '../../common/constant/response-code.js';
-import { isUniqueViolation } from '../../shared/utils/error.util.js';
+import { CreateRoleDto } from '../dto/create-role.dto.js';
+import { UpdateRoleDto } from '../dto/update-role.dto.js';
+import { ApiResponse } from '../../../common/response/api.response.js';
+import { Role } from '../type/role.type.js';
+import { ApiException } from '../../../common/exception/api.exception.js';
+import { ResponseCode } from '../../../common/constant/response-code.js';
+import { isUniqueViolation } from '../../../shared/utils/error.util.js';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { RoleRepository } from '../repository/role.repository.js';
 
 @Injectable()
 export class RoleService {
   constructor(
     @InjectPinoLogger(RoleService.name)
     private readonly logger: PinoLogger,
+    private readonly roleRepository: RoleRepository,
   ) {}
 
-  async create(request: CreateRoleRequestDto): Promise<ApiResponse<Role>> {
+  async create(request: CreateRoleDto): Promise<ApiResponse<Role>> {
     const methodName = this.create.name;
 
     try {
-      const role = await db.orm.public.Role.create({
-        name: request.name,
-        description: request.description,
-      });
+      const role = await this.roleRepository.create(request);
 
       return ApiResponse.success(role, 'Role created successfully');
     } catch (error: unknown) {
@@ -46,13 +44,13 @@ export class RoleService {
   }
 
   async findAll(): Promise<ApiResponse<Role[]>> {
-    const roles = await db.orm.public.Role.all();
+    const roles = await this.roleRepository.findAll();
     return ApiResponse.success(roles, 'Roles retrieved successfully');
   }
 
   async findOne(id: string): Promise<ApiResponse<Role | null>> {
     const methodName = this.findOne.name;
-    const role = await db.orm.public.Role.where({ id }).first();
+    const role = await this.roleRepository.findById(id);
 
     if (!role) {
       this.logger.error({
@@ -69,12 +67,12 @@ export class RoleService {
 
   async update(
     id: string,
-    request: UpdateRoleRequestDto,
+    request: UpdateRoleDto,
   ): Promise<ApiResponse<Role | null>> {
     const methodName = this.update.name;
 
     try {
-      const role = await db.orm.public.Role.where({ id }).first();
+      const role = await this.roleRepository.findById(id);
 
       if (!role) {
         this.logger.error({
@@ -87,10 +85,7 @@ export class RoleService {
         throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
       }
 
-      const updatedRole = await db.orm.public.Role.where({ id }).update({
-        name: request.name,
-        description: request.description,
-      });
+      const updatedRole = await this.roleRepository.update(id, request);
 
       return ApiResponse.success(updatedRole, 'Role updated successfully');
     } catch (error: unknown) {
@@ -114,7 +109,7 @@ export class RoleService {
 
   async remove(id: string): Promise<ApiResponse<Role>> {
     const methodName = this.remove.name;
-    const deletedRole = await db.orm.public.Role.where({ id }).delete();
+    const deletedRole = await this.roleRepository.delete(id);
 
     if (!deletedRole) {
       this.logger.error({
