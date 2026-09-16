@@ -5,8 +5,6 @@ enum AuthTokenType {
   REFRESH = "REFRESH"
   RESET_PASSWORD = "RESET_PASSWORD"
   VERIFY_EMAIL = "VERIFY_EMAIL"
-
-  @@map("auth_token_type")
 }
 
 enum UserStatus {
@@ -14,8 +12,6 @@ enum UserStatus {
   ACTIVE = "ACTIVE"
   INACTIVE = "INACTIVE"
   SUSPENDED = "SUSPENDED"
-
-  @@map("user_status")
 }
 
 namespace public {

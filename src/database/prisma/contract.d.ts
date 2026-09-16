@@ -22,6 +22,7 @@ import type {
 
 import type {
   ContractWithTypeMaps,
+  RelationKeys,
   TypeMaps as TypeMapsType,
 } from '@prisma/orm-postgres/family-contract/types';
 import type {
@@ -571,6 +572,124 @@ export type StorageColumnInputTypes = {
     };
   };
 };
+
+export namespace Models {
+  export type public_Role = {
+    id: CodecTypes['pg/uuid@1']['output'];
+    name: CodecTypes['pg/text@1']['output'];
+    description: CodecTypes['pg/text@1']['output'] | null;
+    createdAt: TimestamptzString<3>;
+    updatedAt: TimestamptzString<3>;
+    rolePermissions: public_RolePermission[];
+    readonly [RelationKeys]?: 'rolePermissions';
+  };
+  export type public_User = {
+    id: CodecTypes['pg/uuid@1']['output'];
+    roleId: CodecTypes['pg/uuid@1']['output'];
+    username: CodecTypes['pg/text@1']['output'];
+    email: CodecTypes['pg/text@1']['output'];
+    status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+    createdAt: TimestamptzString<3>;
+    updatedAt: TimestamptzString<3>;
+    auditLogs: public_AuditLog[];
+    authCredential: public_AuthCredential | null;
+    authTokens: public_AuthToken[];
+    role: public_Role;
+    userProfile: public_UserProfile | null;
+    readonly [RelationKeys]?:
+      'auditLogs' | 'authCredential' | 'authTokens' | 'role' | 'userProfile';
+  };
+  export type public_UserProfile = {
+    id: CodecTypes['pg/uuid@1']['output'];
+    userId: CodecTypes['pg/uuid@1']['output'];
+    firstName: CodecTypes['pg/text@1']['output'];
+    middleName: CodecTypes['pg/text@1']['output'] | null;
+    lastName: CodecTypes['pg/text@1']['output'];
+    contactNumber: CodecTypes['pg/text@1']['output'] | null;
+    dateOfBirth: CodecTypes['pg/date-string@1']['output'] | null;
+    avatarUrl: CodecTypes['pg/text@1']['output'] | null;
+    createdAt: TimestamptzString<3>;
+    updatedAt: TimestamptzString<3>;
+    user: public_User;
+    readonly [RelationKeys]?: 'user';
+  };
+  export type public_AuthCredential = {
+    id: CodecTypes['pg/uuid@1']['output'];
+    userId: CodecTypes['pg/uuid@1']['output'];
+    passwordHash: CodecTypes['pg/text@1']['output'];
+    emailVerifiedAt: TimestamptzString<3> | null;
+    lastLoginAt: TimestamptzString<3> | null;
+    passwordChangedAt: TimestamptzString<3> | null;
+    failedLoginAttempts: CodecTypes['pg/int4@1']['output'];
+    lockedUntil: TimestamptzString<3> | null;
+    createdAt: TimestamptzString<3>;
+    updatedAt: TimestamptzString<3>;
+    user: public_User;
+    readonly [RelationKeys]?: 'user';
+  };
+  export type public_AuthToken = {
+    id: CodecTypes['pg/uuid@1']['output'];
+    userId: CodecTypes['pg/uuid@1']['output'];
+    _type: 'ACCESS' | 'REFRESH' | 'RESET_PASSWORD' | 'VERIFY_EMAIL';
+    token: CodecTypes['pg/text@1']['output'];
+    expiresAt: TimestamptzString<3>;
+    usedAt: TimestamptzString<3> | null;
+    createdAt: TimestamptzString<3>;
+    updatedAt: TimestamptzString<3>;
+    user: public_User;
+    readonly [RelationKeys]?: 'user';
+  };
+  export type public_Permission = {
+    id: CodecTypes['pg/uuid@1']['output'];
+    name: CodecTypes['pg/text@1']['output'];
+    resource: CodecTypes['pg/text@1']['output'];
+    action: CodecTypes['pg/text@1']['output'];
+    description: CodecTypes['pg/text@1']['output'] | null;
+    createdAt: TimestamptzString<3>;
+    updatedAt: TimestamptzString<3>;
+    rolePermissions: public_RolePermission[];
+    readonly [RelationKeys]?: 'rolePermissions';
+  };
+  export type public_RolePermission = {
+    roleId: CodecTypes['pg/uuid@1']['output'];
+    permissionId: CodecTypes['pg/uuid@1']['output'];
+    createdBy: CodecTypes['pg/uuid@1']['output'] | null;
+    createdAt: TimestamptzString<3>;
+    updatedAt: TimestamptzString<3>;
+    permission: public_Permission;
+    role: public_Role;
+    readonly [RelationKeys]?: 'permission' | 'role';
+  };
+  export type public_AuditLog = {
+    id: CodecTypes['pg/uuid@1']['output'];
+    userId: CodecTypes['pg/uuid@1']['output'] | null;
+    action: CodecTypes['pg/text@1']['output'];
+    resource: CodecTypes['pg/text@1']['output'];
+    resourceId: CodecTypes['pg/uuid@1']['output'] | null;
+    description: CodecTypes['pg/text@1']['output'] | null;
+    ipAddress: CodecTypes['pg/text@1']['output'] | null;
+    userAgent: CodecTypes['pg/text@1']['output'] | null;
+    metadata: CodecTypes['pg/json@1']['output'] | null;
+    createdAt: TimestamptzString<3>;
+    updatedAt: TimestamptzString<3>;
+    user: public_User | null;
+    readonly [RelationKeys]?: 'user';
+  };
+}
+
+export declare const models: {
+  public: {
+    Role: Models.public_Role;
+    User: Models.public_User;
+    UserProfile: Models.public_UserProfile;
+    AuthCredential: Models.public_AuthCredential;
+    AuthToken: Models.public_AuthToken;
+    Permission: Models.public_Permission;
+    RolePermission: Models.public_RolePermission;
+    AuditLog: Models.public_AuditLog;
+  };
+};
+
 export type TypeMaps = TypeMapsType<
   CodecTypes,
   QueryOperationTypes,
@@ -1290,6 +1409,7 @@ type ContractBase = Omit<
               readonly user: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
                 readonly cardinality: 'N:1';
+                readonly nullable: true;
                 readonly on: {
                   readonly localFields: readonly ['userId'];
                   readonly targetFields: readonly ['id'];
@@ -1385,6 +1505,7 @@ type ContractBase = Omit<
               readonly user: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
                 readonly cardinality: 'N:1';
+                readonly nullable: false;
                 readonly on: {
                   readonly localFields: readonly ['userId'];
                   readonly targetFields: readonly ['id'];
@@ -1463,6 +1584,7 @@ type ContractBase = Omit<
               readonly user: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
                 readonly cardinality: 'N:1';
+                readonly nullable: false;
                 readonly on: {
                   readonly localFields: readonly ['userId'];
                   readonly targetFields: readonly ['id'];
@@ -1644,6 +1766,7 @@ type ContractBase = Omit<
                   readonly model: 'Permission';
                 };
                 readonly cardinality: 'N:1';
+                readonly nullable: false;
                 readonly on: {
                   readonly localFields: readonly ['permissionId'];
                   readonly targetFields: readonly ['id'];
@@ -1652,6 +1775,7 @@ type ContractBase = Omit<
               readonly role: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Role' };
                 readonly cardinality: 'N:1';
+                readonly nullable: false;
                 readonly on: {
                   readonly localFields: readonly ['roleId'];
                   readonly targetFields: readonly ['id'];
@@ -1727,6 +1851,7 @@ type ContractBase = Omit<
                   readonly model: 'AuthCredential';
                 };
                 readonly cardinality: '1:1';
+                readonly nullable: true;
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['userId'];
@@ -1746,6 +1871,7 @@ type ContractBase = Omit<
               readonly role: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Role' };
                 readonly cardinality: 'N:1';
+                readonly nullable: false;
                 readonly on: {
                   readonly localFields: readonly ['roleId'];
                   readonly targetFields: readonly ['id'];
@@ -1757,6 +1883,7 @@ type ContractBase = Omit<
                   readonly model: 'UserProfile';
                 };
                 readonly cardinality: '1:1';
+                readonly nullable: true;
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['userId'];
@@ -1832,6 +1959,7 @@ type ContractBase = Omit<
               readonly user: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
                 readonly cardinality: 'N:1';
+                readonly nullable: false;
                 readonly on: {
                   readonly localFields: readonly ['userId'];
                   readonly targetFields: readonly ['id'];
