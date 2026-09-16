@@ -11,36 +11,38 @@ import { RoleService } from '../service/role.service.js';
 import { CreateRoleDto } from '../dto/create-role.dto.js';
 import { UpdateRoleDto } from '../dto/update-role.dto.js';
 import { AppParseUUIDPipe } from '../../../common/pipe/app-parse-uuid.pipe.js';
+import { Role } from '../type/role.type.js';
+import { ApiResponse } from '../../../common/response/api.response.js';
 
 @Controller('roles')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post()
-  create(@Body() request: CreateRoleDto) {
-    return this.roleService.create(request);
+  async create(@Body() request: CreateRoleDto): Promise<ApiResponse<Role>> {
+    return await this.roleService.create(request);
   }
 
   @Get()
-  findAll() {
-    return this.roleService.findAll();
+  async findAll(): Promise<ApiResponse<Role[]>> {
+    return await this.roleService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', AppParseUUIDPipe) id: string) {
-    return this.roleService.findOne(id);
+  async findOne(@Param('id', AppParseUUIDPipe) id: string): Promise<ApiResponse<Role | null>> {
+    return await this.roleService.findOne(id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id', AppParseUUIDPipe) id: string,
     @Body() request: UpdateRoleDto,
-  ) {
-    return this.roleService.update(id, request);
+  ): Promise<ApiResponse<Role | null>> {
+    return await this.roleService.update(id, request);
   }
 
   @Delete(':id')
-  remove(@Param('id', AppParseUUIDPipe) id: string) {
-    return this.roleService.remove(id);
+  async remove(@Param('id', AppParseUUIDPipe) id: string): Promise<ApiResponse<Role>> {
+    return await this.roleService.remove(id);
   }
 }
