@@ -56,45 +56,6 @@
     ]
   },
   {
-    "id": "table.auth_credentials",
-    "label": "Create table \"auth_credentials\"",
-    "summary": "Creates table \"auth_credentials\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "table",
-        "name": "auth_credentials"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure table \"auth_credentials\" does not exist",
-        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"auth_credentials\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "create table \"auth_credentials\"",
-        "sql": "CREATE TABLE \"public\".\"auth_credentials\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email_verified_at\" timestamptz(3),\n  \"failed_login_attempts\" int4 DEFAULT 0 NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_login_at\" timestamptz(3),\n  \"locked_until\" timestamptz(3),\n  \"password_changed_at\" timestamptz(3),\n  \"password_hash\" text NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
-        "params": []
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify table \"auth_credentials\" exists",
-        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"auth_credentials\""
-        ]
-      }
-    ]
-  },
-  {
     "id": "table.auth_tokens",
     "label": "Create table \"auth_tokens\"",
     "summary": "Creates table \"auth_tokens\"",
@@ -236,7 +197,7 @@
     "execute": [
       {
         "description": "create table \"roles\"",
-        "sql": "CREATE TABLE \"public\".\"roles\" (\n  \"createdAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"roles\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" uuid NOT NULL,\n  \"name\" text NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -314,7 +275,7 @@
     "execute": [
       {
         "description": "create table \"users\"",
-        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"role_id\" uuid NOT NULL,\n  \"status\" text DEFAULT 'ACTIVE' NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"username\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"users_status_check_a34ffd8e\" CHECK (\"status\" IN ('ACTIVE', 'INACTIVE', 'SUSPENDED'))\n)",
+        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"email_verified_at\" timestamptz(3),\n  \"failed_login_attempts\" int4 DEFAULT 0 NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_login_at\" timestamptz(3),\n  \"locked_until\" timestamptz(3),\n  \"password\" text NOT NULL,\n  \"password_changed_at\" timestamptz(3),\n  \"role_id\" uuid NOT NULL,\n  \"status\" text DEFAULT 'ACTIVE' NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"username\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"users_status_check_a34ffd8e\" CHECK (\"status\" IN ('ACTIVE', 'INACTIVE', 'SUSPENDED'))\n)",
         "params": []
       }
     ],
@@ -324,48 +285,6 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"users\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "unique.auth_credentials.auth_credentials_user_id_key",
-    "label": "Add unique constraint on \"auth_credentials\" (user_id)",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "unique",
-        "name": "auth_credentials_user_id_key",
-        "table": "auth_credentials"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure constraint \"auth_credentials_user_id_key\" does not exist",
-        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "auth_credentials_user_id_key",
-          "public",
-          "\"public\".\"auth_credentials\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "add unique constraint \"auth_credentials_user_id_key\"",
-        "sql": "ALTER TABLE \"public\".\"auth_credentials\" ADD CONSTRAINT \"auth_credentials_user_id_key\" UNIQUE (\"user_id\")"
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify constraint \"auth_credentials_user_id_key\" exists",
-        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "auth_credentials_user_id_key",
-          "public",
-          "\"public\".\"auth_credentials\""
         ]
       }
     ]
@@ -1170,48 +1089,6 @@
           "audit_logs_user_id_fkey",
           "public",
           "\"public\".\"audit_logs\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "foreignKey.auth_credentials.auth_credentials_user_id_fkey",
-    "label": "Add foreign key \"auth_credentials_user_id_fkey\" on \"auth_credentials\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "foreignKey",
-        "name": "auth_credentials_user_id_fkey",
-        "table": "auth_credentials"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure FK \"auth_credentials_user_id_fkey\" does not exist",
-        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "auth_credentials_user_id_fkey",
-          "public",
-          "\"public\".\"auth_credentials\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "add FK \"auth_credentials_user_id_fkey\"",
-        "sql": "ALTER TABLE \"public\".\"auth_credentials\"\nADD CONSTRAINT \"auth_credentials_user_id_fkey\"\nFOREIGN KEY (\"user_id\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE\nON UPDATE CASCADE"
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify FK \"auth_credentials_user_id_fkey\" exists",
-        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "auth_credentials_user_id_fkey",
-          "public",
-          "\"public\".\"auth_credentials\""
         ]
       }
     ]

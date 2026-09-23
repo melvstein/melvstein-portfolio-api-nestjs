@@ -19,7 +19,7 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post()
-  async create(@Body() request: CreateRoleDto): Promise<ApiResponse<Role>> {
+  async create(@Body() request: CreateRoleDto) {
     return await this.roleService.create(request);
   }
 
@@ -29,7 +29,7 @@ export class RoleController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', AppParseUUIDPipe) id: string): Promise<ApiResponse<Role | null>> {
+  async findOne(@Param('id', AppParseUUIDPipe) id: string) {
     return await this.roleService.findOne(id);
   }
 
@@ -37,12 +37,12 @@ export class RoleController {
   async update(
     @Param('id', AppParseUUIDPipe) id: string,
     @Body() request: UpdateRoleDto,
-  ): Promise<ApiResponse<Role | null>> {
+  ) {
     return await this.roleService.update(id, request);
   }
 
   @Delete(':id')
-  async remove(@Param('id', AppParseUUIDPipe) id: string): Promise<ApiResponse<Role>> {
+  async remove(@Param('id', AppParseUUIDPipe) id: string) {
     return await this.roleService.remove(id);
   }
 }

@@ -8,10 +8,6 @@
       "model": "AuditLog",
       "namespace": "public"
     },
-    "auth_credentials": {
-      "model": "AuthCredential",
-      "namespace": "public"
-    },
     "auth_tokens": {
       "model": "AuthToken",
       "namespace": "public"
@@ -223,152 +219,6 @@
               },
               "namespaceId": "public",
               "table": "audit_logs"
-            }
-          },
-          "AuthCredential": {
-            "fields": {
-              "createdAt": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "emailVerifiedAt": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "failedLoginAttempts": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
-              "id": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/uuid@1",
-                  "kind": "scalar"
-                }
-              },
-              "lastLoginAt": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "lockedUntil": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "passwordChangedAt": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "passwordHash": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "updatedAt": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "userId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/uuid@1",
-                  "kind": "scalar"
-                }
-              }
-            },
-            "relations": {
-              "user": {
-                "cardinality": "N:1",
-                "nullable": false,
-                "on": {
-                  "localFields": [
-                    "userId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "User",
-                  "namespace": "public"
-                }
-              }
-            },
-            "storage": {
-              "fields": {
-                "createdAt": {
-                  "column": "created_at"
-                },
-                "emailVerifiedAt": {
-                  "column": "email_verified_at"
-                },
-                "failedLoginAttempts": {
-                  "column": "failed_login_attempts"
-                },
-                "id": {
-                  "column": "id"
-                },
-                "lastLoginAt": {
-                  "column": "last_login_at"
-                },
-                "lockedUntil": {
-                  "column": "locked_until"
-                },
-                "passwordChangedAt": {
-                  "column": "password_changed_at"
-                },
-                "passwordHash": {
-                  "column": "password_hash"
-                },
-                "updatedAt": {
-                  "column": "updated_at"
-                },
-                "userId": {
-                  "column": "user_id"
-                }
-              },
-              "namespaceId": "public",
-              "table": "auth_credentials"
             }
           },
           "AuthToken": {
@@ -664,7 +514,7 @@
             "storage": {
               "fields": {
                 "createdAt": {
-                  "column": "createdAt"
+                  "column": "created_at"
                 },
                 "description": {
                   "column": "description"
@@ -676,7 +526,7 @@
                   "column": "name"
                 },
                 "updatedAt": {
-                  "column": "updatedAt"
+                  "column": "updated_at"
                 }
               },
               "namespaceId": "public",
@@ -802,11 +652,65 @@
                   "kind": "scalar"
                 }
               },
+              "emailVerifiedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "failedLoginAttempts": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/uuid@1",
                   "kind": "scalar"
+                }
+              },
+              "lastLoginAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "lockedUntil": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "password": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "passwordChangedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
                 }
               },
               "roleId": {
@@ -860,22 +764,6 @@
                 },
                 "to": {
                   "model": "AuditLog",
-                  "namespace": "public"
-                }
-              },
-              "authCredential": {
-                "cardinality": "1:1",
-                "nullable": true,
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "userId"
-                  ]
-                },
-                "to": {
-                  "model": "AuthCredential",
                   "namespace": "public"
                 }
               },
@@ -935,8 +823,26 @@
                 "email": {
                   "column": "email"
                 },
+                "emailVerifiedAt": {
+                  "column": "email_verified_at"
+                },
+                "failedLoginAttempts": {
+                  "column": "failed_login_attempts"
+                },
                 "id": {
                   "column": "id"
+                },
+                "lastLoginAt": {
+                  "column": "last_login_at"
+                },
+                "lockedUntil": {
+                  "column": "locked_until"
+                },
+                "password": {
+                  "column": "password"
+                },
+                "passwordChangedAt": {
+                  "column": "password_changed_at"
                 },
                 "roleId": {
                   "column": "role_id"
@@ -1227,123 +1133,6 @@
                 ]
               },
               "uniques": []
-            },
-            "auth_credentials": {
-              "columns": {
-                "created_at": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nativeType": "timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "email_verified_at": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "failed_login_attempts": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": 0
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                },
-                "id": {
-                  "codecId": "pg/uuid@1",
-                  "nativeType": "uuid",
-                  "nullable": false
-                },
-                "last_login_at": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "locked_until": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "password_changed_at": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "password_hash": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
-                "updated_at": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nativeType": "timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "user_id": {
-                  "codecId": "pg/uuid@1",
-                  "nativeType": "uuid",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [
-                {
-                  "onDelete": "cascade",
-                  "onUpdate": "cascade",
-                  "source": {
-                    "columns": [
-                      "user_id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "auth_credentials"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "users"
-                  }
-                }
-              ],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": [
-                {
-                  "columns": [
-                    "user_id"
-                  ]
-                }
-              ]
             },
             "auth_tokens": {
               "checks": [
@@ -1659,7 +1448,7 @@
             },
             "roles": {
               "columns": {
-                "createdAt": {
+                "created_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
                     "expression": "now()",
@@ -1686,7 +1475,7 @@
                   "nativeType": "text",
                   "nullable": false
                 },
-                "updatedAt": {
+                "updated_at": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
                     "expression": "now()",
@@ -1841,10 +1630,56 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "email_verified_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "failed_login_attempts": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
                 "id": {
                   "codecId": "pg/uuid@1",
                   "nativeType": "uuid",
                   "nullable": false
+                },
+                "last_login_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "locked_until": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "password": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "password_changed_at": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
                 },
                 "role_id": {
                   "codecId": "pg/uuid@1",
@@ -1971,10 +1806,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "9abb83fd29053b17e8bac785da9998e9ca78a030e49b730485e846627bd840a7"
+    "storageHash": "6f5aef99a6f6ee180337814c105ecca2cc3a8c8c1319e7f2fabc4d34f083e2e3"
   },
   "execution": {
-    "executionHash": "4b7d9f33bc2295e0cd02c1f6d2933a515115277872b74b67422d1561546ead71",
+    "executionHash": "37d4ad2c7d0ba89c1a338b283289a09998247c145dcbd5cd9010c0231ad4eb82",
     "mutations": {
       "defaults": [
         {
@@ -1986,17 +1821,6 @@
             "column": "id",
             "namespace": "public",
             "table": "audit_logs"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "uuidv4",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "id",
-            "namespace": "public",
-            "table": "auth_credentials"
           }
         },
         {

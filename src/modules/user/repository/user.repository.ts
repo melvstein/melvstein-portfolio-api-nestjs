@@ -1,30 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import type { CreateUserDto } from '../dto/create-user.dto.js';
-import { db } from '../../../database/prisma/db.js';
+import { runtime, users } from '../../../database/prisma/db.js';
 
 @Injectable()
 export class UserRepository {
   async create(user: CreateUserDto) {
-    return await db.orm.public.User.create(user);
+    const query = users.insert([user]).build();
+    return await runtime.query(query);
   }
 
   async update(id: string, user: CreateUserDto) {
-    return await db.orm.public.User.where({ id }).update(user);
+    const query = users
+      .update(user)
+      .where((f, fns) => fns.eq(f.id, id))
+      .build();
+
+    return await runtime.query(query);
   }
 
   async delete(id: string) {
-    return await db.orm.public.User.where({ id }).delete();
+    const query = users
+      .delete()
+      .where((f, fns) => fns.eq(f.id, id))
+      .build();
+
+    return await runtime.query(query);
   }
 
   async findAll() {
-    return await db.orm.public.User.all();
+    const query = users
+      .select('id', 'username', 'email', 'created_at', 'updated_at')
+      .build();
+
+    return await runtime.query(query);
   }
 
   async findById(id: string) {
-    return await db.orm.public.User.where({ id }).first();
+    const query = users
+      .select('id', 'username', 'email', 'created_at', 'updated_at')
+      .where((f, fns) => fns.eq(f.id, id))
+      .build();
+
+    return await runtime.query(query);
   }
 
   async findByUsername(username: string) {
-    return await db.orm.public.User.where({ username }).first();
+    const query = users
+      .select('id', 'username', 'email', 'created_at', 'updated_at')
+      .where((f, fns) => fns.eq(f.username, username))
+      .build();
+
+    return await runtime.query(query);
   }
 }

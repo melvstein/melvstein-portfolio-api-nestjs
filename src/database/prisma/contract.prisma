@@ -19,27 +19,32 @@ namespace public {
     id              Uuid                 @id @default(uuid())
     name            String               @unique
     description     String?
-    createdAt       TimestamptzString(3) @default(now())
-    updatedAt       TimestamptzString(3) @default(now())
+    createdAt       TimestamptzString(3) @default(now()) @map("created_at")
+    updatedAt       TimestamptzString(3) @default(now()) @map("updated_at")
     rolePermissions RolePermission[]
 
     @@map("roles")
   }
 
   model User {
-    id             Uuid                 @id @default(uuid())
-    roleId         Uuid                 @map("role_id")
-    username       String               @unique
-    email          String               @unique
-    status         UserStatus           @default(ACTIVE)
-    createdAt      TimestamptzString(3) @default(now()) @map("created_at")
-    updatedAt      TimestamptzString(3) @default(now()) @map("updated_at")
-    auditLogs      AuditLog[]
-    authCredential AuthCredential?
-    authTokens     AuthToken[]
-    userProfile    UserProfile?
+    id                  Uuid                  @id @default(uuid())
+    roleId              Uuid                  @map("role_id")
+    username            String                @unique
+    password            String
+    email               String                @unique
+    status              UserStatus            @default(ACTIVE)
+    createdAt           TimestamptzString(3)  @default(now()) @map("created_at")
+    updatedAt           TimestamptzString(3)  @default(now()) @map("updated_at")
+    auditLogs           AuditLog[]
+    emailVerifiedAt     TimestamptzString(3)? @map("email_verified_at")
+    lastLoginAt         TimestamptzString(3)? @map("last_login_at")
+    passwordChangedAt   TimestamptzString(3)? @map("password_changed_at")
+    failedLoginAttempts Int                   @default(0) @map("failed_login_attempts")
+    lockedUntil         TimestamptzString(3)? @map("locked_until")
+    authTokens          AuthToken[]
+    userProfile         UserProfile?
 
-    role           Role                 @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade)
+    role                Role                  @relation(fields:[roleId], references:[id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([status], map: "users_status_idx")
     @@index([createdAt], map: "users_created_at_idx")
@@ -61,23 +66,6 @@ namespace public {
     user          User                 @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade)
 
     @@map("user_profiles")
-  }
-
-  model AuthCredential {
-    id                  Uuid                  @id @default(uuid())
-    userId              Uuid                  @unique @map("user_id")
-    passwordHash        String                @map("password_hash")
-    emailVerifiedAt     TimestamptzString(3)? @map("email_verified_at")
-    lastLoginAt         TimestamptzString(3)? @map("last_login_at")
-    passwordChangedAt   TimestamptzString(3)? @map("password_changed_at")
-    failedLoginAttempts Int                   @default(0) @map("failed_login_attempts")
-    lockedUntil         TimestamptzString(3)? @map("locked_until")
-    createdAt           TimestamptzString(3)  @default(now()) @map("created_at")
-    updatedAt           TimestamptzString(3)  @default(now()) @map("updated_at")
-
-    user                User                  @relation(fields:[userId], references:[id], onDelete: Cascade, onUpdate: Cascade)
-
-    @@map("auth_credentials")
   }
 
   model AuthToken {

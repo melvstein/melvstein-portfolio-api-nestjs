@@ -7,3 +7,7 @@ export const db = postgres<Contract>({
   contractJson,
   url: process.env['DATABASE_URL']!,
 });
+
+export const runtime = db.runtime();
+export const roles = db.sql.public.roles;
+export const users = db.sql.public.users;
