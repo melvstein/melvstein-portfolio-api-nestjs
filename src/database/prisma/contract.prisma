@@ -29,9 +29,9 @@ namespace public {
   model User {
     id                  Uuid                  @id @default(uuid())
     roleId              Uuid                  @map("role_id")
+    email               String                @unique
     username            String                @unique
     password            String
-    email               String                @unique
     status              UserStatus            @default(ACTIVE)
     createdAt           TimestamptzString(3)  @default(now()) @map("created_at")
     updatedAt           TimestamptzString(3)  @default(now()) @map("updated_at")

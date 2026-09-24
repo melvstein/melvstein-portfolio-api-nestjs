@@ -1,43 +1,121 @@
 import { Injectable } from '@nestjs/common';
 import type { CreateUserDto } from '../dto/create-user.dto.js';
-import { runtime, users } from '../../../database/prisma/db.js';
+import type { UpdateUserDto } from '../dto/update-user.dto.js';
+import { runtime, Users } from '../../../database/prisma/db.js';
 
 @Injectable()
 export class UserRepository {
   async create(user: CreateUserDto) {
-    const query = users.insert([user]).build();
+    const query = Users.insert([
+      {
+        role_id: user.roleId,
+        email: user.email,
+        username: user.username,
+        password: user.password,
+      },
+    ])
+      .returning(
+        'id',
+        'email',
+        'username',
+        'password',
+        'status',
+        'role_id',
+        'email_verified_at',
+        'last_login_at',
+        'password_changed_at',
+        'failed_login_attempts',
+        'locked_until',
+        'created_at',
+        'updated_at',
+      )
+      .build();
+
     return await runtime.query(query);
   }
 
-  async update(id: string, user: CreateUserDto) {
-    const query = users
-      .update(user)
+  async update(id: string, user: UpdateUserDto) {
+    const query = Users.update(user)
       .where((f, fns) => fns.eq(f.id, id))
+      .returning(
+        'id',
+        'email',
+        'username',
+        'password',
+        'status',
+        'role_id',
+        'email_verified_at',
+        'last_login_at',
+        'password_changed_at',
+        'failed_login_attempts',
+        'locked_until',
+        'created_at',
+        'updated_at',
+      )
       .build();
 
     return await runtime.query(query);
   }
 
   async delete(id: string) {
-    const query = users
-      .delete()
+    const query = Users.delete()
       .where((f, fns) => fns.eq(f.id, id))
+      .returning(
+        'id',
+        'email',
+        'username',
+        'password',
+        'status',
+        'role_id',
+        'email_verified_at',
+        'last_login_at',
+        'password_changed_at',
+        'failed_login_attempts',
+        'locked_until',
+        'created_at',
+        'updated_at',
+      )
       .build();
 
     return await runtime.query(query);
   }
 
   async findAll() {
-    const query = users
-      .select('id', 'username', 'email', 'created_at', 'updated_at')
-      .build();
+    const query = Users.select(
+      'id',
+      'email',
+      'username',
+      'password',
+      'status',
+      'role_id',
+      'email_verified_at',
+      'last_login_at',
+      'password_changed_at',
+      'failed_login_attempts',
+      'locked_until',
+      'created_at',
+      'updated_at',
+    ).build();
 
     return await runtime.query(query);
   }
 
   async findById(id: string) {
-    const query = users
-      .select('id', 'username', 'email', 'created_at', 'updated_at')
+    const query = Users.select(
+      'id',
+      'email',
+      'username',
+      'password',
+      'status',
+      'role_id',
+      'email_verified_at',
+      'last_login_at',
+      'password_changed_at',
+      'failed_login_attempts',
+      'locked_until',
+      'created_at',
+      'updated_at',
+    )
       .where((f, fns) => fns.eq(f.id, id))
       .build();
 
@@ -45,8 +123,21 @@ export class UserRepository {
   }
 
   async findByUsername(username: string) {
-    const query = users
-      .select('id', 'username', 'email', 'created_at', 'updated_at')
+    const query = Users.select(
+      'id',
+      'email',
+      'username',
+      'password',
+      'status',
+      'role_id',
+      'email_verified_at',
+      'last_login_at',
+      'password_changed_at',
+      'failed_login_attempts',
+      'locked_until',
+      'created_at',
+      'updated_at',
+    )
       .where((f, fns) => fns.eq(f.username, username))
       .build();
 

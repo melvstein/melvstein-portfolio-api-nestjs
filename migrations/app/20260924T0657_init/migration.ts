@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/6f5aef99a6f6ee180337814c105ecca2cc3a8c8c1319e7f2fabc4d34f083e2e3/contract';
-import endContract from '../../snapshots/6f5aef99a6f6ee180337814c105ecca2cc3a8c8c1319e7f2fabc4d34f083e2e3/contract.json' with { type: 'json' };
+import type { Contract as End } from '../../snapshots/031d9d21041678f8153032c5db438b7ba91e44c7035b3e45b5245234576a7efa/contract';
+import endContract from '../../snapshots/031d9d21041678f8153032c5db438b7ba91e44c7035b3e45b5245234576a7efa/contract.json' with { type: 'json' };
 import {
   Migration,
   MigrationCLI,
@@ -247,14 +247,14 @@ export default class M extends Migration<never, End> {
       this.addUnique({
         schema: 'public',
         table: 'users',
-        constraint: 'users_username_key',
-        columns: ['username'],
+        constraint: 'users_email_key',
+        columns: ['email'],
       }),
       this.addUnique({
         schema: 'public',
         table: 'users',
-        constraint: 'users_email_key',
-        columns: ['email'],
+        constraint: 'users_username_key',
+        columns: ['username'],
       }),
       this.createIndex({
         schema: 'public',

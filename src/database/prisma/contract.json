@@ -1771,12 +1771,12 @@
               "uniques": [
                 {
                   "columns": [
-                    "username"
+                    "email"
                   ]
                 },
                 {
                   "columns": [
-                    "email"
+                    "username"
                   ]
                 }
               ]
@@ -1806,7 +1806,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "6f5aef99a6f6ee180337814c105ecca2cc3a8c8c1319e7f2fabc4d34f083e2e3"
+    "storageHash": "031d9d21041678f8153032c5db438b7ba91e44c7035b3e45b5245234576a7efa"
   },
   "execution": {
     "executionHash": "37d4ad2c7d0ba89c1a338b283289a09998247c145dcbd5cd9010c0231ad4eb82",

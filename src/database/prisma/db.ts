@@ -9,5 +9,5 @@ export const db = postgres<Contract>({
 });
 
 export const runtime = db.runtime();
-export const roles = db.sql.public.roles;
-export const users = db.sql.public.users;
+export const Roles = db.sql.public.roles;
+export const Users = db.sql.public.users;

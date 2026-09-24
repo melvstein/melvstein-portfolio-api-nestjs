@@ -1,8 +1,9 @@
-import { UserStatus } from '../enum/user-status.enum.js';
+import type { UserStatus } from '../enum/user-status.enum.js';
 
 export class CreateUserDto {
   roleId!: string;
-  username!: string;
   email!: string;
-  status!: UserStatus;
+  username!: string;
+  password!: string;
+  status?: UserStatus;
 }

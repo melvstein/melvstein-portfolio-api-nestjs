@@ -21,10 +21,23 @@ export class RoleService {
     const methodName = this.create.name;
 
     try {
-      const role = await this.roleRepository.create(request);
+      const [createdRole] = await this.roleRepository.create(request);
+
+      if (!createdRole) {
+        this.logger.error({
+          method: methodName,
+          message: 'Failed to create role',
+          request,
+        });
+
+        throw new ApiException(
+          ResponseCode.INTERNAL_SERVER_ERROR,
+          'Failed to create role',
+        );
+      }
 
       return ApiResponse.success(
-        RoleMapper.toDto(role),
+        RoleMapper.toDto(createdRole),
         'Role created successfully',
       );
     } catch (error: unknown) {
@@ -48,12 +61,16 @@ export class RoleService {
 
   async findAll() {
     const roles = await this.roleRepository.findAll();
-    return ApiResponse.success(roles, 'Roles retrieved successfully');
+
+    return ApiResponse.success(
+      roles.map(RoleMapper.toDto),
+      'Roles retrieved successfully',
+    );
   }
 
   async findOne(id: string) {
     const methodName = this.findOne.name;
-    const role = await this.roleRepository.findById(id);
+    const [role] = await this.roleRepository.findById(id);
 
     if (!role) {
       this.logger.error({
@@ -65,14 +82,17 @@ export class RoleService {
       throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
     }
 
-    return ApiResponse.success(role, 'Role retrieved successfully');
+    return ApiResponse.success(
+      RoleMapper.toDto(role),
+      'Role retrieved successfully',
+    );
   }
 
   async update(id: string, request: UpdateRoleDto) {
     const methodName = this.update.name;
 
     try {
-      const role = await this.roleRepository.findById(id);
+      const [role] = await this.roleRepository.findById(id);
 
       if (!role) {
         this.logger.error({
@@ -85,9 +105,12 @@ export class RoleService {
         throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
       }
 
-      const updatedRole = await this.roleRepository.update(id, request);
+      const [updatedRole] = await this.roleRepository.update(id, request);
 
-      return ApiResponse.success(updatedRole, 'Role updated successfully');
+      return ApiResponse.success(
+        RoleMapper.toDto(updatedRole),
+        'Role updated successfully',
+      );
     } catch (error: unknown) {
       if (isUniqueViolation(error)) {
         this.logger.error({
@@ -109,9 +132,9 @@ export class RoleService {
 
   async remove(id: string) {
     const methodName = this.remove.name;
-    const deletedRole = await this.roleRepository.delete(id);
+    const [deletedRole] = await this.roleRepository.delete(id);
 
-    if (!deletedRole.length) {
+    if (!deletedRole) {
       this.logger.error({
         methodName,
         message: 'Role not found',
@@ -121,6 +144,9 @@ export class RoleService {
       throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
     }
 
-    return ApiResponse.success(deletedRole, 'Role removed successfully');
+    return ApiResponse.success(
+      RoleMapper.toDto(deletedRole),
+      'Role removed successfully',
+    );
   }
 }

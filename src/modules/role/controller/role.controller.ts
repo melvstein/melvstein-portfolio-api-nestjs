@@ -11,8 +11,6 @@ import { RoleService } from '../service/role.service.js';
 import { CreateRoleDto } from '../dto/create-role.dto.js';
 import { UpdateRoleDto } from '../dto/update-role.dto.js';
 import { AppParseUUIDPipe } from '../../../common/pipe/app-parse-uuid.pipe.js';
-import { Role } from '../type/role.type.js';
-import { ApiResponse } from '../../../common/response/api.response.js';
 
 @Controller('roles')
 export class RoleController {
@@ -24,7 +22,7 @@ export class RoleController {
   }
 
   @Get()
-  async findAll(): Promise<ApiResponse<Role[]>> {
+  async findAll() {
     return await this.roleService.findAll();
   }
 
