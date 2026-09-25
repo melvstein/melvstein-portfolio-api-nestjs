@@ -37,12 +37,23 @@ export class UserRepository {
       username?: string;
       password?: string;
       status?: UserStatusEnum;
-    } = {
-      role_id: user.roleId,
-      email: user.email,
-      username: user.username,
-      password: user.password,
-    };
+    } = {};
+
+    if (user.roleId !== undefined) {
+      updateData.role_id = user.roleId;
+    }
+
+    if (user.email !== undefined) {
+      updateData.email = user.email;
+    }
+
+    if (user.username !== undefined) {
+      updateData.username = user.username;
+    }
+
+    if (user.password !== undefined) {
+      updateData.password = user.password;
+    }
 
     if (user.status !== undefined) {
       updateData.status = user.status;
