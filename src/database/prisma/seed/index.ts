@@ -1,7 +1,9 @@
 import { seedRoles } from './role.seed.js';
+import { seedUsers } from './user.seed.js';
 
 async function seed() {
   await seedRoles();
+  await seedUsers();
 }
 
 seed()
