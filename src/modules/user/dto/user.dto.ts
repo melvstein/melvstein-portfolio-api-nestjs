@@ -1,10 +1,10 @@
-import type { UserStatus } from '../enum/user-status.enum.js';
+import type { UserStatusEnum } from '../enum/user-status.enum.js';
 
 export interface UserDto {
   id: string;
   email: string;
   username: string;
-  status: UserStatus;
+  status: UserStatusEnum;
   role_id: string;
   emailVerifiedAt: string | null;
   lastLoginAt: string | null;

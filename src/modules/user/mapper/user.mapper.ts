@@ -1,6 +1,6 @@
 import { User } from '../type/user.type.js';
 import type { UserDto } from '../dto/user.dto.js';
-import type { UserStatus } from '../enum/user-status.enum.js';
+import type { UserStatusEnum } from '../enum/user-status.enum.js';
 import { localDateTimeFormatted } from '../../../shared/utils/app.util.js';
 
 export class UserMapper {
@@ -9,7 +9,7 @@ export class UserMapper {
       id: user.id,
       email: user.email,
       username: user.username,
-      status: user.status as UserStatus,
+      status: user.status as UserStatusEnum,
       role_id: user.role_id,
       emailVerifiedAt: user.email_verified_at
         ? localDateTimeFormatted(new Date(String(user.email_verified_at)))

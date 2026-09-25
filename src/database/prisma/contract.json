@@ -37,27 +37,6 @@
     "namespaces": {
       "public": {
         "enum": {
-          "AuthTokenType": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "ACCESS",
-                "value": "ACCESS"
-              },
-              {
-                "name": "REFRESH",
-                "value": "REFRESH"
-              },
-              {
-                "name": "RESET_PASSWORD",
-                "value": "RESET_PASSWORD"
-              },
-              {
-                "name": "VERIFY_EMAIL",
-                "value": "VERIFY_EMAIL"
-              }
-            ]
-          },
           "UserStatus": {
             "codecId": "pg/text@1",
             "members": [
@@ -223,19 +202,6 @@
           },
           "AuthToken": {
             "fields": {
-              "_type": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "AuthTokenType",
-                  "namespaceId": "public",
-                  "plane": "domain"
-                }
-              },
               "createdAt": {
                 "nullable": false,
                 "type": {
@@ -264,6 +230,13 @@
                 }
               },
               "token": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "type": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -318,9 +291,6 @@
             },
             "storage": {
               "fields": {
-                "_type": {
-                  "column": "type"
-                },
                 "createdAt": {
                   "column": "created_at"
                 },
@@ -332,6 +302,9 @@
                 },
                 "token": {
                   "column": "token"
+                },
+                "type": {
+                  "column": "type"
                 },
                 "updatedAt": {
                   "column": "updated_at"
@@ -1135,13 +1108,6 @@
               "uniques": []
             },
             "auth_tokens": {
-              "checks": [
-                {
-                  "expression": "\"type\" IN ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL')",
-                  "name": "auth_tokens_type_check_c4a33696",
-                  "prefix": "auth_tokens_type_check"
-                }
-              ],
               "columns": {
                 "created_at": {
                   "codecId": "pg/timestamptz-string@1",
@@ -1176,13 +1142,7 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "AuthTokenType",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "updated_at": {
                   "codecId": "pg/timestamptz-string@1",
@@ -1721,7 +1681,6 @@
               },
               "foreignKeys": [
                 {
-                  "onDelete": "cascade",
                   "onUpdate": "cascade",
                   "source": {
                     "columns": [
@@ -1783,15 +1742,6 @@
             }
           },
           "valueSet": {
-            "AuthTokenType": {
-              "kind": "valueSet",
-              "values": [
-                "ACCESS",
-                "REFRESH",
-                "RESET_PASSWORD",
-                "VERIFY_EMAIL"
-              ]
-            },
             "UserStatus": {
               "kind": "valueSet",
               "values": [
@@ -1806,7 +1756,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "031d9d21041678f8153032c5db438b7ba91e44c7035b3e45b5245234576a7efa"
+    "storageHash": "919ccf7fd52c658caf21ecbdf3fbf84c7f529c0ae0af319810ef95ca14db693a"
   },
   "execution": {
     "executionHash": "37d4ad2c7d0ba89c1a338b283289a09998247c145dcbd5cd9010c0231ad4eb82",
@@ -1894,6 +1844,8 @@
       "checkConstraint": true,
       "defaultInInsert": true,
       "enums": true,
+      "insertOnConflictSkip": true,
+      "insertOnConflictWithoutTarget": true,
       "lateral": true,
       "returning": true,
       "scalarList": true

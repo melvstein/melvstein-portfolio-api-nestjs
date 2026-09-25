@@ -80,7 +80,7 @@
     "execute": [
       {
         "description": "create table \"auth_tokens\"",
-        "sql": "CREATE TABLE \"public\".\"auth_tokens\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"expires_at\" timestamptz(3) NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"token\" text NOT NULL,\n  \"type\" text NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"used_at\" timestamptz(3),\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"auth_tokens_type_check_c4a33696\" CHECK (\"type\" IN ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL'))\n)",
+        "sql": "CREATE TABLE \"public\".\"auth_tokens\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"expires_at\" timestamptz(3) NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"token\" text NOT NULL,\n  \"type\" text NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"used_at\" timestamptz(3),\n  \"user_id\" uuid NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -1288,7 +1288,7 @@
     "execute": [
       {
         "description": "add FK \"users_role_id_fkey\"",
-        "sql": "ALTER TABLE \"public\".\"users\"\nADD CONSTRAINT \"users_role_id_fkey\"\nFOREIGN KEY (\"role_id\")\nREFERENCES \"public\".\"roles\" (\"id\")\nON DELETE CASCADE\nON UPDATE CASCADE"
+        "sql": "ALTER TABLE \"public\".\"users\"\nADD CONSTRAINT \"users_role_id_fkey\"\nFOREIGN KEY (\"role_id\")\nREFERENCES \"public\".\"roles\" (\"id\")\nON UPDATE CASCADE"
       }
     ],
     "postcheck": [
