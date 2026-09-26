@@ -49,6 +49,12 @@ export class ResponseCode {
     HttpStatus.NOT_FOUND,
   );
 
+  static UNAUTHORIZED = new ResponseCode(
+    'UNAUTHORIZED',
+    'Unauthorized',
+    HttpStatus.UNAUTHORIZED,
+  );
+
   static get(code: string): ResponseCode {
     return Object.values(ResponseCode).find(
       (responseCode: ResponseCode) => responseCode.getCode() === code,

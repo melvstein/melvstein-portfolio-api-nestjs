@@ -3,6 +3,7 @@ import { CreateUserDto } from '../dto/create-user.dto.js';
 import { UpdateUserDto } from '../dto/update-user.dto.js';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import * as bcrypt from 'bcrypt';
+import { BcryptConstant } from '../../../common/constant/bcrypt.constant.js';
 import { isUniqueViolation } from '../../../shared/utils/error.util.js';
 import { UserRepository } from '../repository/user.repository.js';
 import { ApiResponse } from '../../../common/response/api.response.js';
@@ -12,7 +13,7 @@ import { RoleRepository } from '../../../modules/role/repository/role.repository
 
 @Injectable()
 export class UserService {
-  private readonly saltRounds = 12;
+  private readonly saltRounds = BcryptConstant.SALT_ROUNDS;
 
   constructor(
     @InjectPinoLogger(UserService.name)
@@ -27,7 +28,6 @@ export class UserService {
 
   async create(request: CreateUserDto) {
     const methodName = this.create.name;
-
     request.password = await this.hashPassword(request.password);
 
     try {
@@ -91,7 +91,7 @@ export class UserService {
 
     if (!user) {
       this.logger.error({
-        methodName,
+        method: methodName,
         message: 'User not found',
         request: { id },
       });
@@ -124,7 +124,7 @@ export class UserService {
 
       if (!user) {
         this.logger.error({
-          methodName,
+          method: methodName,
           message: 'User not found',
           paramId: id,
           request,
@@ -139,7 +139,7 @@ export class UserService {
     } catch (error: unknown) {
       if (isUniqueViolation(error)) {
         this.logger.error({
-          methodName,
+          method: methodName,
           message: 'Duplicate entry error',
           request,
           error,
@@ -161,7 +161,7 @@ export class UserService {
 
     if (!deletedUser) {
       this.logger.error({
-        methodName,
+        method: methodName,
         message: 'User not found',
         request: { id },
       });
@@ -170,5 +170,9 @@ export class UserService {
     }
 
     return ApiResponse.success(deletedUser, 'User removed successfully');
+  }
+
+  async findByUsername(username: string) {
+    return await this.userRepository.findByUsername(username);
   }
 }

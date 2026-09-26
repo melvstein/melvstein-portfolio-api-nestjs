@@ -4,6 +4,7 @@ import {
   Logger,
   NotFoundException,
   ExecutionContext,
+  UnauthorizedException,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { ApiException } from '../exception/api.exception.js';
@@ -35,6 +36,18 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       return response
         .status(exception.getStatus())
         .json(new ApiResponse(ResponseCode.NOT_FOUND, exception.message));
+    }
+
+    if (exception instanceof UnauthorizedException) {
+      this.logger.error({
+        methodName,
+        message: 'Unauthorized exception',
+        error: JSON.stringify(exception),
+      });
+
+      return response
+        .status(exception.getStatus())
+        .json(new ApiResponse(ResponseCode.UNAUTHORIZED, exception.message));
     }
 
     this.logger.error({

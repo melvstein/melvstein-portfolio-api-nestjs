@@ -1,4 +1,6 @@
 import { Roles, Users, runtime } from '../db.js';
+import * as bcrypt from 'bcrypt';
+import { BcryptConstant } from '../../../common/constant/bcrypt.constant.js';
 
 const superAdmin = {
   email: 'melvinbayogo@gmail.com',
@@ -7,6 +9,7 @@ const superAdmin = {
 };
 
 export async function seedUsers() {
+  // Ensure the password hashing is awaited
   console.log('🌱 Seeding users...');
 
   const roleQuery = Roles.select('id')
@@ -16,10 +19,18 @@ export async function seedUsers() {
   const [superAdminRole] = await runtime.query(roleQuery);
 
   const insertQuery = Users.insert([
-    { ...superAdmin, role_id: superAdminRole.id },
+    {
+      ...superAdmin,
+      role_id: superAdminRole.id,
+      password: await bcrypt.hash(
+        superAdmin.password,
+        BcryptConstant.SALT_ROUNDS,
+      ),
+    },
   ])
     .returning('id')
     .build();
+
   const [insertedUser] = await runtime.query(insertQuery);
 
   const userQuery = Users.outerLeftJoin(Roles, (f, fns) =>

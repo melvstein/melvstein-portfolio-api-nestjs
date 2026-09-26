@@ -43,7 +43,7 @@ export class RoleService {
     } catch (error: unknown) {
       if (isUniqueViolation(error)) {
         this.logger.error({
-          methodName,
+          method: methodName,
           message: 'Duplicate entry error',
           request,
           error,
@@ -74,7 +74,7 @@ export class RoleService {
 
     if (!role) {
       this.logger.error({
-        methodName,
+        method: methodName,
         message: 'Role not found',
         request: { id },
       });
@@ -96,7 +96,7 @@ export class RoleService {
 
       if (!role) {
         this.logger.error({
-          methodName,
+          method: methodName,
           message: 'Role not found',
           paramId: id,
           request,
@@ -114,7 +114,7 @@ export class RoleService {
     } catch (error: unknown) {
       if (isUniqueViolation(error)) {
         this.logger.error({
-          methodName,
+          method: methodName,
           message: 'Duplicate entry error',
           request,
           error,
@@ -136,7 +136,7 @@ export class RoleService {
 
     if (!deletedRole) {
       this.logger.error({
-        methodName,
+        method: methodName,
         message: 'Role not found',
         request: { id },
       });
