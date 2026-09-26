@@ -1,5 +1,5 @@
-import type { ResultType } from '@prisma/orm-postgres/components/runtime';
 import { Users } from 'src/database/prisma/db';
+import type { ResultType } from '@prisma/orm-postgres/components/runtime';
 
 export const userQuery = Users.select(
   'id',

@@ -172,6 +172,10 @@ export class UserService {
     return ApiResponse.success(deletedUser, 'User removed successfully');
   }
 
+  async getUserDetailsById(id: string) {
+    return await this.userRepository.getUserDetailsById(id);
+  }
+
   async findByUsername(username: string) {
     return await this.userRepository.findByUsername(username);
   }
