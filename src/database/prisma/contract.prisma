@@ -1,11 +1,4 @@
 // use prisma-next
-enum UserStatus {
-  @@type("pg/text@1")
-  ACTIVE = "ACTIVE"
-  INACTIVE = "INACTIVE"
-  SUSPENDED = "SUSPENDED"
-}
-
 namespace public {
   model Role {
     id              Uuid                 @id @default(uuid())
@@ -24,7 +17,7 @@ namespace public {
     email               String                @unique
     username            String                @unique
     password            String
-    status              UserStatus            @default(ACTIVE)
+    status              String
     createdAt           TimestamptzString(3)  @default(now()) @map("created_at")
     updatedAt           TimestamptzString(3)  @default(now()) @map("updated_at")
     auditLogs           AuditLog[]

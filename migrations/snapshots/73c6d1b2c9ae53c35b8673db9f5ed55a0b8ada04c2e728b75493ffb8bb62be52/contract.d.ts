@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'919ccf7fd52c658caf21ecbdf3fbf84c7f529c0ae0af319810ef95ca14db693a'>;
+  StorageHashBase<'73c6d1b2c9ae53c35b8673db9f5ed55a0b8ada04c2e728b75493ffb8bb62be52'>;
 export type ExecutionHash =
   ExecutionHashBase<'37d4ad2c7d0ba89c1a338b283289a09998247c145dcbd5cd9010c0231ad4eb82'>;
 export type ProfileHash =
@@ -307,7 +307,7 @@ export type FieldOutputTypes = {
       readonly password: CodecTypes['pg/text@1']['output'];
       readonly passwordChangedAt: TimestamptzString<3> | null;
       readonly roleId: CodecTypes['pg/uuid@1']['output'];
-      readonly status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+      readonly status: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: TimestamptzString<3>;
       readonly username: CodecTypes['pg/text@1']['output'];
     };
@@ -384,7 +384,7 @@ export type FieldInputTypes = {
       readonly password: CodecTypes['pg/text@1']['input'];
       readonly passwordChangedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly roleId: CodecTypes['pg/uuid@1']['input'];
-      readonly status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+      readonly status: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly username: CodecTypes['pg/text@1']['input'];
     };
@@ -473,7 +473,7 @@ export type StorageColumnTypes = {
       readonly password: CodecTypes['pg/text@1']['output'];
       readonly password_changed_at: TimestamptzString<3> | null;
       readonly role_id: CodecTypes['pg/uuid@1']['output'];
-      readonly status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+      readonly status: CodecTypes['pg/text@1']['output'];
       readonly updated_at: TimestamptzString<3>;
       readonly username: CodecTypes['pg/text@1']['output'];
     };
@@ -550,7 +550,7 @@ export type StorageColumnInputTypes = {
       readonly password: CodecTypes['pg/text@1']['input'];
       readonly password_changed_at: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly role_id: CodecTypes['pg/uuid@1']['input'];
-      readonly status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+      readonly status: CodecTypes['pg/text@1']['input'];
       readonly updated_at: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly username: CodecTypes['pg/text@1']['input'];
     };
@@ -626,7 +626,7 @@ export namespace Models {
     password: CodecTypes['pg/text@1']['output'];
     passwordChangedAt: TimestamptzString<3> | null;
     roleId: CodecTypes['pg/uuid@1']['output'];
-    status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+    status: CodecTypes['pg/text@1']['output'];
     updatedAt: TimestamptzString<3>;
     username: CodecTypes['pg/text@1']['output'];
     auditLogs: public_AuditLog[];
@@ -1173,10 +1173,6 @@ type ContractBase = Omit<
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'ACTIVE'>;
-                  };
                 };
                 readonly updated_at: {
                   readonly nativeType: 'timestamptz';
@@ -1228,12 +1224,6 @@ type ContractBase = Omit<
                   };
                 },
               ];
-            };
-          };
-          readonly valueSet: {
-            readonly UserStatus: {
-              readonly kind: 'valueSet';
-              readonly values: readonly ['ACTIVE', 'INACTIVE', 'SUSPENDED'];
             };
           };
         };
@@ -1841,16 +1831,6 @@ type ContractBase = Omit<
                 readonly userId: { readonly column: 'user_id' };
               };
             };
-          };
-        };
-        readonly enum: {
-          readonly UserStatus: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'ACTIVE'; readonly value: 'ACTIVE' },
-              { readonly name: 'INACTIVE'; readonly value: 'INACTIVE' },
-              { readonly name: 'SUSPENDED'; readonly value: 'SUSPENDED' },
-            ];
           };
         };
       };

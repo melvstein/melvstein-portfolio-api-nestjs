@@ -275,7 +275,7 @@
     "execute": [
       {
         "description": "create table \"users\"",
-        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"email_verified_at\" timestamptz(3),\n  \"failed_login_attempts\" int4 DEFAULT 0 NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_login_at\" timestamptz(3),\n  \"locked_until\" timestamptz(3),\n  \"password\" text NOT NULL,\n  \"password_changed_at\" timestamptz(3),\n  \"role_id\" uuid NOT NULL,\n  \"status\" text DEFAULT 'ACTIVE' NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"username\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"users_status_check_a34ffd8e\" CHECK (\"status\" IN ('ACTIVE', 'INACTIVE', 'SUSPENDED'))\n)",
+        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"created_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"email_verified_at\" timestamptz(3),\n  \"failed_login_attempts\" int4 DEFAULT 0 NOT NULL,\n  \"id\" uuid NOT NULL,\n  \"last_login_at\" timestamptz(3),\n  \"locked_until\" timestamptz(3),\n  \"password\" text NOT NULL,\n  \"password_changed_at\" timestamptz(3),\n  \"role_id\" uuid NOT NULL,\n  \"status\" text NOT NULL,\n  \"updated_at\" timestamptz(3) DEFAULT (now()) NOT NULL,\n  \"username\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],

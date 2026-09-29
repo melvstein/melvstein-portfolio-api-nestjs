@@ -36,25 +36,6 @@
   "domain": {
     "namespaces": {
       "public": {
-        "enum": {
-          "UserStatus": {
-            "codecId": "pg/text@1",
-            "members": [
-              {
-                "name": "ACTIVE",
-                "value": "ACTIVE"
-              },
-              {
-                "name": "INACTIVE",
-                "value": "INACTIVE"
-              },
-              {
-                "name": "SUSPENDED",
-                "value": "SUSPENDED"
-              }
-            ]
-          }
-        },
         "models": {
           "AuditLog": {
             "fields": {
@@ -698,12 +679,6 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "UserStatus",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "updatedAt": {
@@ -1565,13 +1540,6 @@
               ]
             },
             "users": {
-              "checks": [
-                {
-                  "expression": "\"status\" IN ('ACTIVE', 'INACTIVE', 'SUSPENDED')",
-                  "name": "users_status_check_a34ffd8e",
-                  "prefix": "users_status_check"
-                }
-              ],
               "columns": {
                 "created_at": {
                   "codecId": "pg/timestamptz-string@1",
@@ -1648,18 +1616,8 @@
                 },
                 "status": {
                   "codecId": "pg/text@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": "ACTIVE"
-                  },
                   "nativeType": "text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "UserStatus",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "nullable": false
                 },
                 "updated_at": {
                   "codecId": "pg/timestamptz-string@1",
@@ -1740,23 +1698,13 @@
                 }
               ]
             }
-          },
-          "valueSet": {
-            "UserStatus": {
-              "kind": "valueSet",
-              "values": [
-                "ACTIVE",
-                "INACTIVE",
-                "SUSPENDED"
-              ]
-            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "919ccf7fd52c658caf21ecbdf3fbf84c7f529c0ae0af319810ef95ca14db693a"
+    "storageHash": "73c6d1b2c9ae53c35b8673db9f5ed55a0b8ada04c2e728b75493ffb8bb62be52"
   },
   "execution": {
     "executionHash": "37d4ad2c7d0ba89c1a338b283289a09998247c145dcbd5cd9010c0231ad4eb82",

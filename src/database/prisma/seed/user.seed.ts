@@ -6,6 +6,7 @@ const superAdmin = {
   email: 'melvinbayogo@gmail.com',
   username: 'melvstein',
   password: 'a12345678',
+  status: 'active',
 };
 
 export async function seedUsers() {
@@ -13,10 +14,21 @@ export async function seedUsers() {
   console.log('🌱 Seeding users...');
 
   const roleQuery = Roles.select('id')
-    .where((f, fns) => fns.eq(f.roles.name, 'SUPERADMIN'))
+    .where((f, fns) => fns.eq(f.roles.name, 'superadmin'))
     .build();
 
   const [superAdminRole] = await runtime.query(roleQuery);
+
+  const existingUserQuery = Users.select('id')
+    .where((f, fns) => fns.eq(f.users.username, superAdmin.username))
+    .build();
+
+  const [existingUser] = await runtime.query(existingUserQuery);
+
+  if (existingUser) {
+    console.log(`User already exists: ${superAdmin.username}`, existingUser);
+    return;
+  }
 
   const insertQuery = Users.insert([
     {

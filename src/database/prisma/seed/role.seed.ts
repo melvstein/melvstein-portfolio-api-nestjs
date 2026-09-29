@@ -2,15 +2,15 @@ import { Roles, runtime } from '../db.js';
 
 const roles = [
   {
-    name: 'SUPERADMIN',
+    name: 'superadmin',
     description: 'Super Administrator with full access',
   },
   {
-    name: 'ADMIN',
+    name: 'admin',
     description: 'Administrator with limited access',
   },
   {
-    name: 'USER',
+    name: 'user',
     description: 'Regular user with limited access',
   },
 ];
@@ -19,6 +19,16 @@ export async function seedRoles() {
   console.log('🌱 Seeding roles...');
 
   for (const role of roles) {
+    const existingRoleQuery = Roles.select('id')
+      .where((f, fns) => fns.eq(f.roles.name, role.name))
+      .build();
+
+    const [existingRole] = await runtime.query(existingRoleQuery);
+
+    if (existingRole) {
+      console.log(`Role already exists: ${role.name}`, existingRole);
+      continue;
+    }
     const query = Roles.insert([role])
       .returning('id', 'name', 'description')
       .build();
