@@ -6,7 +6,6 @@ import { loggerConfig } from './config/logger.config.js';
 import { NativeLogger } from 'nestjs-pino';
 import { ResponseCode } from './common/constant/response-code.js';
 import { ApiException } from './common/exception/api.exception.js';
-import { AuthGuard } from './common/guard/auth.guard.js';
 import { GlobalExceptionFilter } from './common/filter/global-exception.filter.js';
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor.js';
 
@@ -31,7 +30,6 @@ async function bootstrap() {
   app.useLogger(logger);
 
   app.useGlobalFilters(new GlobalExceptionFilter());
-  app.useGlobalGuards(new AuthGuard());
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   app.useGlobalPipes(

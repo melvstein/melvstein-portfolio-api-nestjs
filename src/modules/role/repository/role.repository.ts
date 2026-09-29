@@ -56,4 +56,18 @@ export class RoleRepository {
 
     return await runtime.query(query);
   }
+
+  async findByName(name: string) {
+    const query = Roles.select(
+      'id',
+      'name',
+      'description',
+      'created_at',
+      'updated_at',
+    )
+      .where((f, fns) => fns.eq(f.name, name))
+      .build();
+
+    return await runtime.query(query);
+  }
 }

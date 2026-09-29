@@ -1,3 +1,9 @@
-import { db } from 'src/database/prisma/db';
+import { UserStatusEnum } from '../enum/user-status.enum.js';
 
-export type CreateUser = Parameters<typeof db.orm.public.User.create>[0];
+export type CreateUser = {
+  role_id: string;
+  email: string;
+  username: string;
+  password: string;
+  status: UserStatusEnum;
+};

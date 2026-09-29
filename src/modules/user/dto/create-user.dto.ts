@@ -2,17 +2,16 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
-  IsOptional,
   IsString,
-  IsUUID,
   MinLength,
 } from 'class-validator';
 import { UserStatusEnum } from '../enum/user-status.enum.js';
+import { RoleEnum } from '../../role/enum/role.enum.js';
 
 export class CreateUserDto {
-  @IsUUID('4', { message: 'Role ID must be a valid UUID' })
-  @IsNotEmpty({ message: 'Role ID must not be empty' })
-  roleId!: string;
+  @IsNotEmpty({ message: 'Role is required' })
+  @IsEnum(RoleEnum, { message: 'Role must be a valid role' })
+  role!: RoleEnum;
 
   @IsEmail({}, { message: 'Email must be a valid email address' })
   @IsNotEmpty({ message: 'Email is required' })

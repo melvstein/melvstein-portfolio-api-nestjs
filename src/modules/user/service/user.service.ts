@@ -10,6 +10,7 @@ import { ApiResponse } from '../../../common/response/api.response.js';
 import { ApiException } from '../../../common/exception/api.exception.js';
 import { ResponseCode } from '../../../common/constant/response-code.js';
 import { RoleRepository } from '../../../modules/role/repository/role.repository.js';
+import { CreateUser } from '../type/create-user.type.js';
 
 @Injectable()
 export class UserService {
@@ -31,7 +32,7 @@ export class UserService {
     request.password = await this.hashPassword(request.password);
 
     try {
-      const [roleExists] = await this.roleRepository.findById(request.roleId);
+      const [roleExists] = await this.roleRepository.findByName(request.role);
 
       if (!roleExists) {
         this.logger.error({
@@ -43,7 +44,15 @@ export class UserService {
         throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
       }
 
-      const createdUser = await this.userRepository.create(request);
+      const createUser: CreateUser = {
+        role_id: roleExists.id,
+        email: request.email,
+        username: request.username,
+        password: request.password,
+        status: request.status,
+      };
+
+      const createdUser = await this.userRepository.create(createUser);
 
       if (!createdUser) {
         this.logger.error({
@@ -106,8 +115,8 @@ export class UserService {
     const methodName = this.update.name;
 
     try {
-      if (request.roleId) {
-        const [roleExists] = await this.roleRepository.findById(request.roleId);
+      if (request.role) {
+        const [roleExists] = await this.roleRepository.findByName(request.role);
 
         if (!roleExists) {
           this.logger.error({

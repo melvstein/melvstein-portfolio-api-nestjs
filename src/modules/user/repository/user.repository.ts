@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import type { CreateUserDto } from '../dto/create-user.dto.js';
-import type { UpdateUserDto } from '../dto/update-user.dto.js';
 import { UserStatusEnum } from '../enum/user-status.enum.js';
 import { Roles, runtime, Users } from '../../../database/prisma/db.js';
+import { CreateUser } from '../type/create-user.type.js';
+import { UpdateUser } from '../type/update-user.type.js';
 
 @Injectable()
 export class UserRepository {
-  async create(user: CreateUserDto) {
+  async create(user: CreateUser) {
     const insertData: {
       role_id: string;
       email: string;
@@ -14,7 +14,7 @@ export class UserRepository {
       password: string;
       status: UserStatusEnum;
     } = {
-      role_id: user.roleId,
+      role_id: user.role_id,
       email: user.email,
       username: user.username,
       password: user.password,
@@ -27,36 +27,8 @@ export class UserRepository {
     return await this.getUserDetailsById(createdUser.id);
   }
 
-  async update(id: string, user: UpdateUserDto) {
-    const updateData: {
-      role_id?: string;
-      email?: string;
-      username?: string;
-      password?: string;
-      status?: UserStatusEnum;
-    } = {};
-
-    if (user.roleId !== undefined) {
-      updateData.role_id = user.roleId;
-    }
-
-    if (user.email !== undefined) {
-      updateData.email = user.email;
-    }
-
-    if (user.username !== undefined) {
-      updateData.username = user.username;
-    }
-
-    if (user.password !== undefined) {
-      updateData.password = user.password;
-    }
-
-    if (user.status !== undefined) {
-      updateData.status = user.status;
-    }
-
-    const query = Users.update(updateData)
+  async update(id: string, user: UpdateUser) {
+    const query = Users.update(user)
       .where((f, fns) => fns.eq(f.id, id))
       .returning('id')
       .build();

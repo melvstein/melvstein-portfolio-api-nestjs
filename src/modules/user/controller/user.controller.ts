@@ -6,21 +6,26 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common';
+import { type Request } from 'express';
 import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard.js';
 import { UserService } from '../service/user.service.js';
 import { CreateUserDto } from '../dto/create-user.dto.js';
 import { UpdateUserDto } from '../dto/update-user.dto.js';
+import { RoleEnum } from '../../../modules/role/enum/role.enum.js';
+import { Roles } from '../../../modules/role/decorator/roles.decorator.js';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() request: CreateUserDto) {
-    return this.userService.create(request);
+  @UseGuards(JwtAuthGuard)
+  @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
+  create(@Req() request: Request) {
+    return this.userService.create(request.body as CreateUserDto);
   }
 
   @Get()
@@ -33,14 +38,16 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
   update(@Param('id') id: string, @Body() request: UpdateUserDto) {
     return this.userService.update(id, request);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }

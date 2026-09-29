@@ -19,6 +19,9 @@ import { createObserveModule } from '@nestjs/observe';
 import { LoggerModule } from 'nestjs-pino';
 import { LoggerMiddleware } from './common/middleware/logger.middleware.js';
 import { RoleController } from './modules/role/controller/role.controller.js';
+import { APP_GUARD } from '@nestjs/core';
+import { RoleGuard } from './modules/role/guard/role.guard.js';
+import { AuthGuard } from './modules/auth/guard/auth.guard.js';
 
 const validationSchema = z.object({
   APP_NAME: z.string().trim().min(1, 'APP_NAME is required'),
@@ -124,7 +127,17 @@ if (process.env.OBSERVE_ENABLED === 'true') {
     AppLoggerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

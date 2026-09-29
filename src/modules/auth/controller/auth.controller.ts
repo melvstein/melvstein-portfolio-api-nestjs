@@ -14,8 +14,8 @@ import { User } from 'src/modules/user/type/user.type.js';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
+  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   async login(@Req() request: Request) {
     return await this.authService.login(request.user as User);
