@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { CreateUserDto } from '../dto/create-user.dto.js';
 import type { UpdateUserDto } from '../dto/update-user.dto.js';
-import type { UserStatusEnum } from '../enum/user-status.enum.js';
+import { UserStatusEnum } from '../enum/user-status.enum.js';
 import { Roles, runtime, Users } from '../../../database/prisma/db.js';
 
 @Injectable()
@@ -12,17 +12,14 @@ export class UserRepository {
       email: string;
       username: string;
       password: string;
-      status?: UserStatusEnum;
+      status: UserStatusEnum;
     } = {
       role_id: user.roleId,
       email: user.email,
       username: user.username,
       password: user.password,
+      status: user.status,
     };
-
-    if (user.status !== undefined) {
-      insertData.status = user.status;
-    }
 
     const query = Users.insert([insertData]).returning('id').build();
     const [createdUser] = await runtime.query(query);
@@ -88,7 +85,6 @@ export class UserRepository {
         id: f.users.id,
         email: f.users.email,
         username: f.users.username,
-        password: f.users.password,
         status: f.users.status,
         roleId: f.users.role_id,
         roleName: f.roles.name,
@@ -105,48 +101,25 @@ export class UserRepository {
     return await runtime.query(query);
   }
 
-  async findById(id: string) {
-    const query = Users.select(
-      'id',
-      'email',
-      'username',
-      'password',
-      'status',
-      'role_id',
-      'email_verified_at',
-      'last_login_at',
-      'password_changed_at',
-      'failed_login_attempts',
-      'locked_until',
-      'created_at',
-      'updated_at',
+  async getUserForAuthenticationByUsername(username: string) {
+    const query = Users.outerLeftJoin(Roles, (f, fns) =>
+      fns.eq(f.users.role_id, f.roles.id),
     )
-      .where((f, fns) => fns.eq(f.id, id))
+      .select((f) => ({
+        id: f.users.id,
+        email: f.users.email,
+        username: f.users.username,
+        password: f.users.password,
+        status: f.users.status,
+        roleId: f.users.role_id,
+        roleName: f.roles.name,
+      }))
+      .where((f, fns) => fns.eq(f.users.username, username))
       .build();
 
-    return await runtime.query(query);
-  }
+    const [user] = await runtime.query(query);
 
-  async findByUsername(username: string) {
-    const query = Users.select(
-      'id',
-      'email',
-      'username',
-      'password',
-      'status',
-      'role_id',
-      'email_verified_at',
-      'last_login_at',
-      'password_changed_at',
-      'failed_login_attempts',
-      'locked_until',
-      'created_at',
-      'updated_at',
-    )
-      .where((f, fns) => fns.eq(f.username, username))
-      .build();
-
-    return await runtime.query(query);
+    return user;
   }
 
   async getUserDetailsById(id: string) {
@@ -157,7 +130,6 @@ export class UserRepository {
         id: f.users.id,
         email: f.users.email,
         username: f.users.username,
-        password: f.users.password,
         status: f.users.status,
         roleId: f.users.role_id,
         roleName: f.roles.name,
@@ -170,6 +142,33 @@ export class UserRepository {
         updatedAt: f.users.updated_at,
       }))
       .where((f, fns) => fns.eq(f.users.id, id))
+      .build();
+
+    const [userDetails] = await runtime.query(query);
+
+    return userDetails;
+  }
+
+  async getUserDetailsByUsername(username: string) {
+    const query = Users.outerLeftJoin(Roles, (f, fns) =>
+      fns.eq(f.users.role_id, f.roles.id),
+    )
+      .select((f) => ({
+        id: f.users.id,
+        email: f.users.email,
+        username: f.users.username,
+        status: f.users.status,
+        roleId: f.users.role_id,
+        roleName: f.roles.name,
+        emailVerifiedAt: f.users.email_verified_at,
+        lastLoginAt: f.users.last_login_at,
+        passwordChangedAt: f.users.password_changed_at,
+        failedLoginAttempts: f.users.failed_login_attempts,
+        lockedUntil: f.users.locked_until,
+        createdAt: f.users.created_at,
+        updatedAt: f.users.updated_at,
+      }))
+      .where((f, fns) => fns.eq(f.users.username, username))
       .build();
 
     const [userDetails] = await runtime.query(query);

@@ -27,7 +27,7 @@ export class CreateUserDto {
   @MinLength(8, { message: 'Password must be at least 8 characters' })
   password!: string;
 
-  @IsOptional()
+  @IsNotEmpty({ message: 'Status is required' })
   @IsEnum(UserStatusEnum, { message: 'Status must be a valid user status' })
-  status?: UserStatusEnum;
+  status!: UserStatusEnum;
 }

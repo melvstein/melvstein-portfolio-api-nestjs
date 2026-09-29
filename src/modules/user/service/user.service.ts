@@ -120,7 +120,7 @@ export class UserService {
         }
       }
 
-      const [user] = await this.userRepository.findById(id);
+      const user = await this.userRepository.getUserDetailsById(id);
 
       if (!user) {
         this.logger.error({
@@ -172,11 +172,17 @@ export class UserService {
     return ApiResponse.success(deletedUser, 'User removed successfully');
   }
 
+  async getUserForAuthenticationByUsername(username: string) {
+    return await this.userRepository.getUserForAuthenticationByUsername(
+      username,
+    );
+  }
+
   async getUserDetailsById(id: string) {
     return await this.userRepository.getUserDetailsById(id);
   }
 
-  async findByUsername(username: string) {
-    return await this.userRepository.findByUsername(username);
+  async getUserDetailsByUsername(username: string) {
+    return await this.userRepository.getUserDetailsByUsername(username);
   }
 }
