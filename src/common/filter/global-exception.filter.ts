@@ -5,6 +5,7 @@ import {
   NotFoundException,
   ExecutionContext,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { ApiException } from '../exception/api.exception.js';
@@ -48,6 +49,18 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       return response
         .status(exception.getStatus())
         .json(new ApiResponse(ResponseCode.UNAUTHORIZED, exception.message));
+    }
+
+    if (exception instanceof ForbiddenException) {
+      this.logger.error({
+        methodName,
+        message: 'Forbidden exception',
+        error: JSON.stringify(exception),
+      });
+
+      return response
+        .status(exception.getStatus())
+        .json(new ApiResponse(ResponseCode.FORBIDDEN, exception.message));
     }
 
     this.logger.error({

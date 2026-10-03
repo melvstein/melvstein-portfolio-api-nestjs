@@ -55,6 +55,12 @@ export class ResponseCode {
     HttpStatus.UNAUTHORIZED,
   );
 
+  static FORBIDDEN = new ResponseCode(
+    'FORBIDDEN',
+    'Forbidden',
+    HttpStatus.FORBIDDEN,
+  );
+
   static get(code: string): ResponseCode {
     return Object.values(ResponseCode).find(
       (responseCode: ResponseCode) => responseCode.getCode() === code,

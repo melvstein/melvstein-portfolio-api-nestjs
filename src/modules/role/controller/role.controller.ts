@@ -18,19 +18,17 @@ import { AppParseUUIDPipe } from '../../../common/pipe/app-parse-uuid.pipe.js';
 import { type Request } from 'express';
 import { UserDetails } from '../../../modules/user/type/user-details.type.js';
 import { Roles } from '../decorator/roles.decorator.js';
+import { RoleGuard } from '../guard/role.guard.js';
 
 @Controller('roles')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
   async create(@Req() request: Request) {
-    return await this.roleService.create(
-      request.body as CreateRoleDto,
-      request.user as UserDetails,
-    );
+    return await this.roleService.create(request.body as CreateRoleDto);
   }
 
   @Get()
@@ -44,7 +42,7 @@ export class RoleController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
   async update(
     @Param('id', AppParseUUIDPipe) id: string,
@@ -53,7 +51,7 @@ export class RoleController {
     return await this.roleService.update(id, request);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
   @Delete(':id')
   async remove(@Param('id', AppParseUUIDPipe) id: string) {

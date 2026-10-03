@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ApiResponse } from '../../../common/response/api.response.js';
-import { User } from 'src/modules/user/type/user.type.js';
+import { User } from '../../../modules/user/type/user.type.js';
 import type { JwtPayload } from '../interface/jwt-payload.interface.js';
 
 @Injectable()

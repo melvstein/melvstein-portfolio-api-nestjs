@@ -1,4 +1,4 @@
-import { Users } from 'src/database/prisma/db';
+import { Users } from '../../../database/prisma/db';
 import type { ResultType } from '@prisma/orm-postgres/components/runtime';
 
 export const userQuery = Users.select(

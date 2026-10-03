@@ -8,7 +8,7 @@ import type { Request, Response } from 'express';
 import { catchError, Observable, tap, map } from 'rxjs';
 import { ApiException } from '../exception/api.exception.js';
 import { ApiResponse } from '../response/api.response.js';
-import { Role } from 'src/modules/role/type/role.type.js';
+import { Role } from '../../modules/role/type/role.type.js';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {

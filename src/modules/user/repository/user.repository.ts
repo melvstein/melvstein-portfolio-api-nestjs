@@ -59,7 +59,7 @@ export class UserRepository {
         username: f.users.username,
         status: f.users.status,
         roleId: f.users.role_id,
-        roleName: f.roles.name,
+        role: f.roles.name,
         emailVerifiedAt: f.users.email_verified_at,
         lastLoginAt: f.users.last_login_at,
         passwordChangedAt: f.users.password_changed_at,
@@ -84,7 +84,7 @@ export class UserRepository {
         password: f.users.password,
         status: f.users.status,
         roleId: f.users.role_id,
-        roleName: f.roles.name,
+        role: f.roles.name,
       }))
       .where((f, fns) => fns.eq(f.users.username, username))
       .build();
@@ -104,7 +104,7 @@ export class UserRepository {
         username: f.users.username,
         status: f.users.status,
         roleId: f.users.role_id,
-        roleName: f.roles.name,
+        role: f.roles.name,
         emailVerifiedAt: f.users.email_verified_at,
         lastLoginAt: f.users.last_login_at,
         passwordChangedAt: f.users.password_changed_at,
@@ -131,7 +131,7 @@ export class UserRepository {
         username: f.users.username,
         status: f.users.status,
         roleId: f.users.role_id,
-        roleName: f.roles.name,
+        role: f.roles.name,
         emailVerifiedAt: f.users.email_verified_at,
         lastLoginAt: f.users.last_login_at,
         passwordChangedAt: f.users.password_changed_at,

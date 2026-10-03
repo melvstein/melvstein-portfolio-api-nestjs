@@ -8,7 +8,7 @@ import { isUniqueViolation } from '../../../shared/utils/error.util.js';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { RoleRepository } from '../repository/role.repository.js';
 import { RoleMapper } from '../mapper/role.mapper.js';
-import { UserDetails } from 'src/modules/user/type/user-details.type.js';
+import { UserDetails } from '../../../modules/user/type/user-details.type.js';
 
 @Injectable()
 export class RoleService {
@@ -18,10 +18,8 @@ export class RoleService {
     private readonly roleRepository: RoleRepository,
   ) {}
 
-  async create(request: CreateRoleDto, authenticatedUser: UserDetails) {
+  async create(request: CreateRoleDto) {
     const methodName = this.create.name;
-
-    console.log('authenticatedUser---', authenticatedUser);
 
     try {
       const [createdRole] = await this.roleRepository.create(request);

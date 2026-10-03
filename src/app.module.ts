@@ -22,6 +22,7 @@ import { RoleController } from './modules/role/controller/role.controller.js';
 import { APP_GUARD } from '@nestjs/core';
 import { RoleGuard } from './modules/role/guard/role.guard.js';
 import { AuthGuard } from './modules/auth/guard/auth.guard.js';
+import { JwtAuthGuard } from './modules/auth/guard/jwt-auth.guard.js';
 
 const validationSchema = z.object({
   APP_NAME: z.string().trim().min(1, 'APP_NAME is required'),
@@ -129,14 +130,6 @@ if (process.env.OBSERVE_ENABLED === 'true') {
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: RoleGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
   ],
 })
 export class AppModule implements NestModule {

@@ -55,7 +55,7 @@ export async function seedUsers() {
       password: f.users.password,
       status: f.users.status,
       roleId: f.users.role_id,
-      roleName: f.roles.name,
+      role: f.roles.name,
       emailVerifiedAt: f.users.email_verified_at,
       lastLoginAt: f.users.last_login_at,
       passwordChangedAt: f.users.password_changed_at,

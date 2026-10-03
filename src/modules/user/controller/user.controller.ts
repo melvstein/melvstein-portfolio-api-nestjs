@@ -16,13 +16,14 @@ import { CreateUserDto } from '../dto/create-user.dto.js';
 import { UpdateUserDto } from '../dto/update-user.dto.js';
 import { RoleEnum } from '../../../modules/role/enum/role.enum.js';
 import { Roles } from '../../../modules/role/decorator/roles.decorator.js';
+import { RoleGuard } from '../../role/guard/role.guard.js';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
   create(@Req() request: Request) {
     return this.userService.create(request.body as CreateUserDto);
@@ -39,14 +40,14 @@ export class UserController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
   update(@Param('id') id: string, @Body() request: UpdateUserDto) {
     return this.userService.update(id, request);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
   remove(@Param('id') id: string) {
     return this.userService.remove(id);

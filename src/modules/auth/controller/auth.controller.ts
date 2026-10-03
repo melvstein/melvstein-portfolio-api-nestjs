@@ -9,7 +9,7 @@ import {
 import { LocalAuthGuard } from '../guard/local-auth.guard.js';
 import { AuthService } from '../service/auth.service.js';
 import { type Request } from 'express';
-import { User } from 'src/modules/user/type/user.type.js';
+import { User } from '../../../modules/user/type/user.type.js';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorator/roles.decorator.js';
 import { RoleEnum } from '../enum/role.enum.js';
+import { UserDetails } from '../../user/type/user-details.type.js';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -19,9 +20,18 @@ export class RoleGuard implements CanActivate {
     if (!requiredRoles) {
       return true;
     }
-    const request: Request = context.switchToHttp().getRequest();
 
-    console.log('wtf', request.user);
-    return true;
+    const request: Request = context.switchToHttp().getRequest();
+    const user = request.user as UserDetails;
+
+    if (!user) {
+      return false;
+    }
+
+    if (requiredRoles.includes(user.role)) {
+      return true;
+    }
+
+    return false;
   }
 }
