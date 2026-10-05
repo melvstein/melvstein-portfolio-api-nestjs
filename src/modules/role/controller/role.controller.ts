@@ -16,7 +16,6 @@ import { CreateRoleDto } from '../dto/create-role.dto.js';
 import { UpdateRoleDto } from '../dto/update-role.dto.js';
 import { AppParseUUIDPipe } from '../../../common/pipe/app-parse-uuid.pipe.js';
 import { type Request } from 'express';
-import { UserDetails } from '../../../modules/user/type/user-details.type.js';
 import { Roles } from '../decorator/roles.decorator.js';
 import { RoleGuard } from '../guard/role.guard.js';
 

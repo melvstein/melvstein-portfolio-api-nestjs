@@ -8,7 +8,6 @@ import { isUniqueViolation } from '../../../shared/utils/error.util.js';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { RoleRepository } from '../repository/role.repository.js';
 import { RoleMapper } from '../mapper/role.mapper.js';
-import { UserDetails } from '../../../modules/user/type/user-details.type.js';
 
 @Injectable()
 export class RoleService {
