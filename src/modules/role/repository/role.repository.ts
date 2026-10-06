@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Roles, runtime } from '../../../database/prisma/db.js';
+import { db, runtime } from '../../../database/prisma/db.js';
 import type { CreateRoleDto } from '../dto/create-role.dto.js';
 import type { UpdateRoleDto } from '../dto/update-role.dto.js';
 
 @Injectable()
 export class RoleRepository {
   async create(role: CreateRoleDto) {
-    const query = Roles.insert([role])
+    const query = db.sql.public.roles
+      .insert([role])
       .returning('id', 'name', 'description', 'created_at', 'updated_at')
       .build();
 
@@ -14,7 +15,8 @@ export class RoleRepository {
   }
 
   async update(id: string, role: UpdateRoleDto) {
-    const query = Roles.update(role)
+    const query = db.sql.public.roles
+      .update(role)
       .where((f, fns) => fns.eq(f.id, id))
       .returning('id', 'name', 'description', 'created_at', 'updated_at')
       .build();
@@ -23,7 +25,8 @@ export class RoleRepository {
   }
 
   async delete(id: string) {
-    const query = Roles.delete()
+    const query = db.sql.public.roles
+      .delete()
       .where((f, fns) => fns.eq(f.id, id))
       .returning('id', 'name', 'description', 'created_at', 'updated_at')
       .build();
@@ -32,25 +35,16 @@ export class RoleRepository {
   }
 
   async findAll() {
-    const query = Roles.select(
-      'id',
-      'name',
-      'description',
-      'created_at',
-      'updated_at',
-    ).build();
+    const query = db.sql.public.roles
+      .select('id', 'name', 'description', 'created_at', 'updated_at')
+      .build();
 
     return await runtime.query(query);
   }
 
   async findById(id: string) {
-    const query = Roles.select(
-      'id',
-      'name',
-      'description',
-      'created_at',
-      'updated_at',
-    )
+    const query = db.sql.public.roles
+      .select('id', 'name', 'description', 'created_at', 'updated_at')
       .where((f, fns) => fns.eq(f.id, id))
       .build();
 
@@ -58,13 +52,8 @@ export class RoleRepository {
   }
 
   async findByName(name: string) {
-    const query = Roles.select(
-      'id',
-      'name',
-      'description',
-      'created_at',
-      'updated_at',
-    )
+    const query = db.sql.public.roles
+      .select('id', 'name', 'description', 'created_at', 'updated_at')
       .where((f, fns) => fns.eq(f.name, name))
       .build();
 

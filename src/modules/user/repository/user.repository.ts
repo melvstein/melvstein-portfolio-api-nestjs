@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserStatusEnum } from '../enum/user-status.enum.js';
-import { Roles, runtime, Users } from '../../../database/prisma/db.js';
+import { db, runtime } from '../../../database/prisma/db.js';
 import { CreateUser } from '../type/create-user.type.js';
 import { UpdateUser } from '../type/update-user.type.js';
 
@@ -21,14 +21,18 @@ export class UserRepository {
       status: user.status,
     };
 
-    const query = Users.insert([insertData]).returning('id').build();
+    const query = db.sql.public.users
+      .insert([insertData])
+      .returning('id')
+      .build();
     const [createdUser] = await runtime.query(query);
 
     return await this.getUserDetailsById(createdUser.id);
   }
 
   async update(id: string, user: UpdateUser) {
-    const query = Users.update(user)
+    const query = db.sql.public.users
+      .update(user)
       .where((f, fns) => fns.eq(f.id, id))
       .returning('id')
       .build();
@@ -39,7 +43,8 @@ export class UserRepository {
   }
 
   async delete(id: string) {
-    const query = Users.delete()
+    const query = db.sql.public.users
+      .delete()
       .where((f, fns) => fns.eq(f.id, id))
       .returning('id')
       .build();
@@ -50,9 +55,10 @@ export class UserRepository {
   }
 
   async findAll() {
-    const query = Users.outerLeftJoin(Roles, (f, fns) =>
-      fns.eq(f.users.role_id, f.roles.id),
-    )
+    const query = db.sql.public.users
+      .outerLeftJoin(db.sql.public.roles, (f, fns) =>
+        fns.eq(f.users.role_id, f.roles.id),
+      )
       .select((f) => ({
         id: f.users.id,
         email: f.users.email,
@@ -74,9 +80,10 @@ export class UserRepository {
   }
 
   async getUserForAuthenticationByUsername(username: string) {
-    const query = Users.outerLeftJoin(Roles, (f, fns) =>
-      fns.eq(f.users.role_id, f.roles.id),
-    )
+    const query = db.sql.public.users
+      .outerLeftJoin(db.sql.public.roles, (f, fns) =>
+        fns.eq(f.users.role_id, f.roles.id),
+      )
       .select((f) => ({
         id: f.users.id,
         email: f.users.email,
@@ -95,9 +102,10 @@ export class UserRepository {
   }
 
   async getUserDetailsById(id: string) {
-    const query = Users.outerLeftJoin(Roles, (f, fns) =>
-      fns.eq(f.users.role_id, f.roles.id),
-    )
+    const query = db.sql.public.users
+      .outerLeftJoin(db.sql.public.roles, (f, fns) =>
+        fns.eq(f.users.role_id, f.roles.id),
+      )
       .select((f) => ({
         id: f.users.id,
         email: f.users.email,
@@ -122,9 +130,10 @@ export class UserRepository {
   }
 
   async getUserDetailsByUsername(username: string) {
-    const query = Users.outerLeftJoin(Roles, (f, fns) =>
-      fns.eq(f.users.role_id, f.roles.id),
-    )
+    const query = db.sql.public.users
+      .outerLeftJoin(db.sql.public.roles, (f, fns) =>
+        fns.eq(f.users.role_id, f.roles.id),
+      )
       .select((f) => ({
         id: f.users.id,
         email: f.users.email,

@@ -1,4 +1,4 @@
-import { Roles, Users, runtime } from '../db.js';
+import { db, runtime } from '../db.js';
 import * as bcrypt from 'bcrypt';
 import { BcryptConstant } from '../../../common/constant/bcrypt.constant.js';
 
@@ -13,13 +13,15 @@ export async function seedUsers() {
   // Ensure the password hashing is awaited
   console.log('🌱 Seeding users...');
 
-  const roleQuery = Roles.select('id')
+  const roleQuery = db.sql.public.roles
+    .select('id')
     .where((f, fns) => fns.eq(f.roles.name, 'superadmin'))
     .build();
 
   const [superAdminRole] = await runtime.query(roleQuery);
 
-  const existingUserQuery = Users.select('id')
+  const existingUserQuery = db.sql.public.users
+    .select('id')
     .where((f, fns) => fns.eq(f.users.username, superAdmin.username))
     .build();
 
@@ -30,24 +32,26 @@ export async function seedUsers() {
     return;
   }
 
-  const insertQuery = Users.insert([
-    {
-      ...superAdmin,
-      role_id: superAdminRole.id,
-      password: await bcrypt.hash(
-        superAdmin.password,
-        BcryptConstant.SALT_ROUNDS,
-      ),
-    },
-  ])
+  const insertQuery = db.sql.public.users
+    .insert([
+      {
+        ...superAdmin,
+        role_id: superAdminRole.id,
+        password: await bcrypt.hash(
+          superAdmin.password,
+          BcryptConstant.SALT_ROUNDS,
+        ),
+      },
+    ])
     .returning('id')
     .build();
 
   const [insertedUser] = await runtime.query(insertQuery);
 
-  const userQuery = Users.outerLeftJoin(Roles, (f, fns) =>
-    fns.eq(f.users.role_id, f.roles.id),
-  )
+  const userQuery = db.sql.public.users
+    .outerLeftJoin(db.sql.public.roles, (f, fns) =>
+      fns.eq(f.users.role_id, f.roles.id),
+    )
     .select((f) => ({
       id: f.users.id,
       email: f.users.email,

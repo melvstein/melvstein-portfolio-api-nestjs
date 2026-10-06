@@ -1,4 +1,4 @@
-import { Roles, runtime } from '../db.js';
+import { db, runtime } from '../db.js';
 
 const roles = [
   {
@@ -19,7 +19,8 @@ export async function seedRoles() {
   console.log('🌱 Seeding roles...');
 
   for (const role of roles) {
-    const existingRoleQuery = Roles.select('id')
+    const existingRoleQuery = db.sql.public.roles
+      .select('id')
       .where((f, fns) => fns.eq(f.roles.name, role.name))
       .build();
 
@@ -29,7 +30,8 @@ export async function seedRoles() {
       console.log(`Role already exists: ${role.name}`, existingRole);
       continue;
     }
-    const query = Roles.insert([role])
+    const query = db.sql.public.roles
+      .insert([role])
       .returning('id', 'name', 'description')
       .build();
 

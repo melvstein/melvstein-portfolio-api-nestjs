@@ -1,4 +1,4 @@
-import { Role } from '../type/role.type';
+import { Role } from '../type/role.type.js';
 import { localDateTimeFormatted } from '../../../shared/utils/app.util.js';
 
 export class RoleMapper {
