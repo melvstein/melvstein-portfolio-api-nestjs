@@ -1,10 +1,10 @@
 import 'dotenv/config';
-import { definePrismaConfig } from '@prisma/cli-engine';
+import { definePrismaConfig } from 'prisma/config';
 import { defineConfig as ormConfig } from '@prisma/orm-postgres/config';
 
 export default definePrismaConfig({
   orm: ormConfig({
-    contract: './src/database/prisma/**/*.prisma',
+    contract: './src/database/prisma/contract.prisma',
     db: {
       connection: process.env['DIRECT_URL']!,
     },
