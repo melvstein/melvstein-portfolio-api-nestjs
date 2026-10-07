@@ -409,11 +409,8 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar"
                 }
               },
               "description": {
@@ -440,11 +437,8 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar"
                 }
               }
             },
@@ -1384,16 +1378,9 @@
             "roles": {
               "columns": {
                 "created_at": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
+                  "codecId": "pg/timestamptz-date@1",
                   "nativeType": "timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "nullable": false
                 },
                 "description": {
                   "codecId": "pg/text@1",
@@ -1411,16 +1398,9 @@
                   "nullable": false
                 },
                 "updated_at": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
+                  "codecId": "pg/timestamptz-date@1",
                   "nativeType": "timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "nullable": false
                 }
               },
               "foreignKeys": [],
@@ -1704,10 +1684,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "73c6d1b2c9ae53c35b8673db9f5ed55a0b8ada04c2e728b75493ffb8bb62be52"
+    "storageHash": "87bc9830e31aec05105be2dd95ffd01155a06d1ea06fca9bb715e2d23cb2d9a8"
   },
   "execution": {
-    "executionHash": "fe3253d88e1430b8c70c47efa54f3be0219f2b0a61b3d017394734717894f0a7",
+    "executionHash": "6142864a355d65d85a6442bf1d0f58b84775ea36cd6d61b497c5e0424ffcda65",
     "mutations": {
       "defaults": [
         {
@@ -1745,12 +1725,38 @@
         },
         {
           "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "roles",
+            "field": "created_at",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
             "id": "uuidv4",
             "kind": "generator"
           },
           "ref": {
             "entry": "roles",
             "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "roles",
+            "field": "updated_at",
             "namespace": "public"
           }
         },
