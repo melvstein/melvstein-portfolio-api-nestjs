@@ -7,8 +7,8 @@ export class RoleMapper {
       id: role.id,
       name: role.name,
       description: role.description,
-      createdAt: localDateTimeFormatted(new Date(String(role.created_at))),
-      updatedAt: localDateTimeFormatted(new Date(String(role.updated_at))),
+      createdAt: localDateTimeFormatted(role.createdAt),
+      updatedAt: localDateTimeFormatted(role.updatedAt),
     };
   };
 }

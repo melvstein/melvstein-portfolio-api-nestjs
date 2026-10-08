@@ -11,6 +11,7 @@ import { ApiException } from '../../../common/exception/api.exception.js';
 import { ResponseCode } from '../../../common/constant/response-code.js';
 import { RoleRepository } from '../../../modules/role/repository/role.repository.js';
 import { CreateUser } from '../type/create-user.type.js';
+import { UpdateUser } from '../type/update-user.type.js';
 
 @Injectable()
 export class UserService {
@@ -32,7 +33,7 @@ export class UserService {
     request.password = await this.hashPassword(request.password);
 
     try {
-      const [roleExists] = await this.roleRepository.findByName(request.role);
+      const roleExists = await this.roleRepository.findByName(request.role);
 
       if (!roleExists) {
         this.logger.error({
@@ -45,7 +46,7 @@ export class UserService {
       }
 
       const createUser: CreateUser = {
-        role_id: roleExists.id,
+        roleId: roleExists.id as string,
         email: request.email,
         username: request.username,
         password: request.password,
@@ -71,7 +72,7 @@ export class UserService {
     } catch (error: unknown) {
       if (isUniqueViolation(error)) {
         this.logger.error({
-          methodName,
+          method: methodName,
           message: 'Duplicate entry error',
           request,
           error,
@@ -95,7 +96,6 @@ export class UserService {
 
   async findOne(id: string) {
     const methodName = this.findOne.name;
-
     const user = await this.userRepository.getUserDetailsById(id);
 
     if (!user) {
@@ -115,8 +115,14 @@ export class UserService {
     const methodName = this.update.name;
 
     try {
+      const updateUser: UpdateUser = {
+        email: request.email,
+        username: request.username,
+        status: request.status,
+      };
+
       if (request.role) {
-        const [roleExists] = await this.roleRepository.findByName(request.role);
+        const roleExists = await this.roleRepository.findByName(request.role);
 
         if (!roleExists) {
           this.logger.error({
@@ -127,6 +133,8 @@ export class UserService {
 
           throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
         }
+
+        updateUser.roleId = roleExists.id as string;
       }
 
       const user = await this.userRepository.getUserDetailsById(id);
@@ -142,7 +150,7 @@ export class UserService {
         throw new ApiException(ResponseCode.NOT_FOUND, 'User not found');
       }
 
-      const updatedUser = await this.userRepository.update(id, request);
+      const updatedUser = await this.userRepository.update(id, updateUser);
 
       return ApiResponse.success(updatedUser, 'User updated successfully');
     } catch (error: unknown) {

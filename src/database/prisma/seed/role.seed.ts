@@ -1,4 +1,4 @@
-import { db, runtime } from '../db.js';
+import { db } from '../db.js';
 
 const roles = [
   {
@@ -19,23 +19,16 @@ export async function seedRoles() {
   console.log('🌱 Seeding roles...');
 
   for (const role of roles) {
-    const existingRoleQuery = db.sql.public.roles
-      .select('id')
-      .where((f, fns) => fns.eq(f.roles.name, role.name))
-      .build();
-
-    const [existingRole] = await runtime.query(existingRoleQuery);
+    const existingRole = await db.orm.public.Role.where({
+      name: role.name,
+    }).first();
 
     if (existingRole) {
       console.log(`Role already exists: ${role.name}`, existingRole);
       continue;
     }
-    const query = db.sql.public.roles
-      .insert([role])
-      .returning('id', 'name', 'description')
-      .build();
 
-    const result = await runtime.query(query);
+    const result = await db.orm.public.Role.create(role);
 
     console.log(`Created role: ${role.name}`, result);
   }

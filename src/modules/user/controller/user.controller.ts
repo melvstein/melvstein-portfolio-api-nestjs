@@ -6,10 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  Req,
 } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common';
-import { type Request } from 'express';
 import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard.js';
 import { UserService } from '../service/user.service.js';
 import { CreateUserDto } from '../dto/create-user.dto.js';
@@ -25,8 +23,8 @@ export class UserController {
   @Post()
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(RoleEnum.SUPERADMIN, RoleEnum.ADMIN)
-  create(@Req() request: Request) {
-    return this.userService.create(request.body as CreateUserDto);
+  create(@Body() request: CreateUserDto) {
+    return this.userService.create(request);
   }
 
   @Get()

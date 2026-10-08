@@ -1,7 +1,7 @@
 import { UserStatusEnum } from '../enum/user-status.enum.js';
 
 export type CreateUser = {
-  role_id: string;
+  roleId: string;
   email: string;
   username: string;
   password: string;

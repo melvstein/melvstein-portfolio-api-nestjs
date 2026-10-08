@@ -21,7 +21,7 @@ export class RoleService {
     const methodName = this.create.name;
 
     try {
-      const [createdRole] = await this.roleRepository.create(request);
+      const createdRole = await this.roleRepository.create(request);
 
       if (!createdRole) {
         this.logger.error({
@@ -61,7 +61,6 @@ export class RoleService {
 
   async findAll() {
     const roles = await this.roleRepository.findAll();
-
     return ApiResponse.success(
       roles.map(RoleMapper.toDto),
       'Roles retrieved successfully',
@@ -70,7 +69,7 @@ export class RoleService {
 
   async findOne(id: string) {
     const methodName = this.findOne.name;
-    const [role] = await this.roleRepository.findById(id);
+    const role = await this.roleRepository.findById(id);
 
     if (!role) {
       this.logger.error({
@@ -92,7 +91,7 @@ export class RoleService {
     const methodName = this.update.name;
 
     try {
-      const [role] = await this.roleRepository.findById(id);
+      const role = await this.roleRepository.findById(id);
 
       if (!role) {
         this.logger.error({
@@ -105,7 +104,21 @@ export class RoleService {
         throw new ApiException(ResponseCode.NOT_FOUND, 'Role not found');
       }
 
-      const [updatedRole] = await this.roleRepository.update(id, request);
+      const updatedRole = await this.roleRepository.update(id, request);
+
+      if (!updatedRole) {
+        this.logger.error({
+          method: methodName,
+          message: 'Failed to update role',
+          paramId: id,
+          request,
+        });
+
+        throw new ApiException(
+          ResponseCode.INTERNAL_SERVER_ERROR,
+          'Failed to update role',
+        );
+      }
 
       return ApiResponse.success(
         RoleMapper.toDto(updatedRole),
@@ -132,7 +145,7 @@ export class RoleService {
 
   async remove(id: string) {
     const methodName = this.remove.name;
-    const [deletedRole] = await this.roleRepository.delete(id);
+    const deletedRole = await this.roleRepository.delete(id);
 
     if (!deletedRole) {
       this.logger.error({

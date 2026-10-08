@@ -1,22 +1,15 @@
-import { db } from '../../../database/prisma/db.js';
-import type { ResultType } from '@prisma/orm-postgres/components/runtime';
+import type { Models } from '../../../database/prisma/contract.js';
+import type {
+  Scalars,
+  Shape,
+} from '@prisma/orm-postgres/family-contract/types';
 
-export const userQuery = db.sql.public.users
-  .select(
-    'id',
-    'username',
-    'password',
-    'email',
-    'status',
-    'role_id',
-    'email_verified_at',
-    'last_login_at',
-    'password_changed_at',
-    'failed_login_attempts',
-    'locked_until',
-    'created_at',
-    'updated_at',
-  )
-  .build();
+export type User = Scalars<Models.public_User>;
 
-export type User = ResultType<typeof userQuery>;
+export type UserDetails = Shape<
+  Models.public_User,
+  {
+    '-': 'password';
+    role: { '+': 'id' | 'name' | 'description' | 'createdAt' | 'updatedAt' };
+  }
+>;

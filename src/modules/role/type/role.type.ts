@@ -1,8 +1,4 @@
-import { db } from '../../../database/prisma/db.js';
-import type { ResultType } from '@prisma/orm-postgres/components/runtime';
+import type { Models } from '../../../database/prisma/contract.js';
+import type { Scalars } from '@prisma/orm-postgres/family-contract/types';
 
-export const roleQuery = db.sql.public.roles
-  .select('id', 'name', 'description', 'created_at', 'updated_at')
-  .build();
-
-export type Role = ResultType<typeof roleQuery>;
+export type Role = Scalars<Models.public_Role>;
