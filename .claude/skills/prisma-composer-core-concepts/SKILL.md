@@ -2,7 +2,7 @@
 name: prisma-composer-core-concepts
 metadata:
   library: "@prisma/composer"
-  library_version: "0.26.0"
+  library_version: "0.28.0"
   version: 2026.9.1
 description: >-
   Use when deploying or managing an app that uses Prisma Composer
@@ -305,6 +305,19 @@ in the workspace's Console settings); `dev` and `log` read neither. The
 `prisma` bin starts under Node; when the modules `module.ts` imports use Bun
 APIs, run it under Bun (`bun node_modules/.bin/prisma deploy module.ts`).
 
+**Progress.** `prisma deploy` prints each step as it starts and finishes, with
+its duration (`✔ assemble web (3m 42s)`), and ends with the real total
+(`Deployed <app> to <stage> in 5m 25s.`). Steps: load config and app, one
+assemble per service, connect to project and branch, check environment
+variables, plan and apply (one step: alchemy does both in one process), record
+result. A slow assemble is usually a Node service with `dir` set, whose
+runtime dependencies are being traced. In json mode (`--json`, or stdout not
+a terminal) each step is a `step-started`/`step-finished` line whose `data`
+holds `durationMs` plus whatever the build adapter or deploy target reported;
+those extra fields vary, so don't parse them as a stable format. The
+`deploy` operation's `onEvent` receives the same steps, and its result's
+`durationMs` is the total.
+
 **Stages.** A stage is an environment name chosen on the command line at
 deploy time, never written in the topology. The identical graph deploys
 everywhere. On the Prisma Cloud target, a Prisma App is one Project and a
@@ -420,7 +433,17 @@ that surprise:
 5. An unset secret doesn't block a local run: it becomes a placeholder plus a
    warning, and only the code path that spends it fails, at the external
    service it calls.
-6. Windows isn't supported yet.
+6. The emulators are machine-wide daemons shared by every `dev`, registered
+   under `~/.prisma-composer/emulators`. Set `PRISMA_COMPOSER_EMULATORS_DIR`
+   to an absolute directory to give a checkout or CI job its own compute and
+   buckets daemons, registry and data; a relative path (or an unexpanded `~`)
+   fails with `DEV.EMULATORS_DIR_INVALID`. It does not isolate local Postgres:
+   servers are named after the app and database, so two checkouts of one app
+   share a server, and `--fresh` or teardown in either stops it and deletes
+   the database for both. `emulatorRegistryRoot()` from
+   `@prisma/composer-prisma-cloud/local-target` returns the directory in
+   effect.
+7. Windows isn't supported yet.
 
 Local Postgres runs on `@prisma/dev`, which `@prisma/composer-prisma-cloud`
 declares as its own dependency (`^0.25.2`) and resolves from its own package.
